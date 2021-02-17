@@ -1,31 +1,79 @@
 package me.kolotilov.letsagoservice.domain.services
 
+import me.kolotilov.letsagoservice.domain.models.Illness
+import me.kolotilov.letsagoservice.domain.models.Symptom
 import me.kolotilov.letsagoservice.domain.models.User
 import me.kolotilov.letsagoservice.persistance.entities.toUser
 import me.kolotilov.letsagoservice.persistance.entities.toUserEntity
 import me.kolotilov.letsagoservice.persistance.repositories.UserRepository
-import me.kolotilov.letsagoservice.utils.log
+import me.kolotilov.letsagoservice.utils.castTo
 import me.kolotilov.letsagoservice.utils.toNullable
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 
+/**
+ * Сервис для работы с пользователями.
+ */
 interface UserService {
 
+    /**
+     * Возвращает текущего пользователя.
+     */
+    fun getCurrentUser(): User
+
+    /**
+     * Возвращает пользователя по его юзернейму.
+     *
+     * @param username Логин пользователя.
+     */
     fun get(username: String): User?
 
+    /**
+     * Регистрирует пользователя.
+     *
+     * @param username Логин.
+     * @param password Пароль.
+     */
     fun register(username: String, password: String)
 
-    fun confirmEmail(url: String): Boolean
+    /**
+     * Редактирует данные пользователя.
+     *
+     * @param name ФИО.
+     * @param age: Возраст.
+     * @param height Рост.
+     * @param weight Вес.
+     * @param illnesses Заболевания.
+     * @param symptoms Симптомы.
+     */
+    fun edit(
+        name: String?,
+        age: Int?,
+        height: Int?,
+        weight: Int?,
+        illnesses: List<Illness>?,
+        symptoms: List<Symptom>?
+    ): User
+
+    /**
+     * Меняет пароль.
+     *
+     * @param password Новый пароль.
+     */
+    fun changePassword(password: String): User
 }
 
 @Service
-private class UserServiceImpl : UserService {
+private class UserServiceImpl(
+    private val userRepository: UserRepository,
+    private val emailService: EmailService
+) : UserService {
 
-    @Autowired
-    private lateinit var userRepository: UserRepository
-
-    @Autowired
-    private lateinit var emailConfirmationService: EmailConfirmationService
+    override fun getCurrentUser(): User {
+        val username = SecurityContextHolder.getContext().authentication.principal
+            .castTo<org.springframework.security.core.userdetails.User>().username
+        return userRepository.findByUsername(username).toNullable()?.toUser()!!
+    }
 
     override fun get(username: String): User? {
         return userRepository.findByUsername(username).toNullable()?.toUser()
@@ -34,21 +82,39 @@ private class UserServiceImpl : UserService {
     override fun register(username: String, password: String) {
         if (get(username) != null)
             throw IllegalStateException("Пользователь $username уже зарегистрирован!")
-        val url = emailConfirmationService.generateUrl(username)
-        log("BRUH", url)
+        val url = emailService.generateUrl(username)
 
         val user = User(
             username = username,
             password = password,
-            confirmationUrl = url,
-            enabled = false
+            confirmationUrl = url
         )
         userRepository.save(user.toUserEntity())
     }
 
-    override fun confirmEmail(url: String): Boolean {
-        val user = userRepository.findByConfirmationUrl(url).toNullable() ?: return false
-        userRepository.save(user.copy(enabled = true))
-        return true
+    override fun edit(
+        name: String?,
+        age: Int?,
+        height: Int?,
+        weight: Int?,
+        illnesses: List<Illness>?,
+        symptoms: List<Symptom>?
+    ): User {
+        val user = getCurrentUser()
+        val newUser = user.copy(
+            name = name ?: user.name,
+            age = age ?: user.age,
+            height = height ?: user.height,
+            weight = weight ?: user.weight,
+            illnesses = illnesses ?: user.illnesses,
+            symptoms = symptoms ?: user.symptoms
+        )
+        return userRepository.save(newUser.toUserEntity()).toUser()
+    }
+
+    override fun changePassword(password: String): User {
+        val user = getCurrentUser()
+        val newUser = user.copy(password = password)
+        return userRepository.save(newUser.toUserEntity()).toUser()
     }
 }
