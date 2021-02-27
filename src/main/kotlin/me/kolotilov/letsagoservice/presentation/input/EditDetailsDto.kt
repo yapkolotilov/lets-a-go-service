@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Range
 import javax.validation.constraints.NotEmpty
 
 @ApiModel("PersonalHealthDto: Данные о здоровье пользователя.")
-data class EditHealthDto(
+data class EditDetailsDto(
     @ApiModelProperty("ФИО.")
     @JsonProperty("name")
     @NotEmpty

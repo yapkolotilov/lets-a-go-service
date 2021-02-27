@@ -26,7 +26,7 @@ data class UserDetailsDto(
     @JsonProperty("illnesses")
     val illnesses: List<String>,
     @ApiModelProperty("Симптомы.")
-    @JsonProperty("symtoms")
+    @JsonProperty("symptoms")
     val symptoms: List<String>
 )
 

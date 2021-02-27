@@ -12,6 +12,9 @@ package me.kolotilov.letsagoservice.domain.models
  * @param weight Вес.
  * @param illnesses Заболевания.
  * @param symptoms Симптомы.
+ * @param filter Фильтр.
+ * @param routes Маршруты.
+ * @param entries Недавние походы.
  */
 data class User(
     val username: String,
@@ -22,5 +25,8 @@ data class User(
     val height: Int = -1,
     val weight: Int = -1,
     val illnesses: List<Illness> = emptyList(),
-    val symptoms: List<Symptom> = emptyList()
+    val symptoms: List<Symptom> = emptyList(),
+    val filter: Filter = Filter(null, null, null, null, 0),
+    val routes: List<Route> = emptyList(),
+    val entries: List<Entry> = emptyList()
 )

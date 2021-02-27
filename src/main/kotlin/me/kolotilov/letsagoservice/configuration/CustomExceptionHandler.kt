@@ -22,6 +22,7 @@ class CustomExceptionHandler : ResponseEntityExceptionHandler() {
             "error" to e.message
         )
         logger.error(e)
+        e.printStackTrace()
         return handleExceptionInternal(e, body, HttpHeaders(), status, request)
     }
 }

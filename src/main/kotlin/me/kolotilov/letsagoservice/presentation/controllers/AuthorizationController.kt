@@ -1,11 +1,11 @@
 package me.kolotilov.letsagoservice.presentation.controllers
 
+import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import me.kolotilov.letsagoservice.configuration.authorization.JwtUtils
 import me.kolotilov.letsagoservice.configuration.authorization.UserDetailsServiceImpl
-import me.kolotilov.letsagoservice.domain.services.EmailService
-import me.kolotilov.letsagoservice.domain.services.UserService
+import me.kolotilov.letsagoservice.domain.services.AuthService
 import me.kolotilov.letsagoservice.presentation.input.LoginDto
 import me.kolotilov.letsagoservice.presentation.output.TokenDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,13 +17,13 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
+@Api("Авторизация в приложении.")
 @RestController
-@RequestMapping("/authorization")
+@RequestMapping("/auth")
 class AuthorizationController(
-    private val userService: UserService,
+    private val authService: AuthService,
     private val authenticationManager: AuthenticationManager,
-    private val jwtUtils: JwtUtils,
-    private val emailService: EmailService
+    private val jwtUtils: JwtUtils
 ) {
 
     @Autowired
@@ -36,7 +36,7 @@ class AuthorizationController(
         @ApiParam("Логин и пароль")
         @RequestBody request: LoginDto
     ) {
-        userService.register(request.username, request.password)
+        authService.register(request.username, request.password)
     }
 
     @ApiOperation("Логин в приложении")
@@ -56,9 +56,9 @@ class AuthorizationController(
     }
 
     @ApiOperation("Подтверждение e-mail")
-    @GetMapping("/confirmEmail/{url}")
+    @GetMapping("/confirm_email/{url}")
     fun confirmEmail(@PathVariable("url") url: String): String {
-        if (emailService.confirmEmail(url))
+        if (authService.confirmEmail(url))
             return "e-mail подтверждён"
         else
             return "Некорректный URL"

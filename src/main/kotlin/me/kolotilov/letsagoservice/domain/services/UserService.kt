@@ -29,14 +29,6 @@ interface UserService {
     fun get(username: String): User?
 
     /**
-     * Регистрирует пользователя.
-     *
-     * @param username Логин.
-     * @param password Пароль.
-     */
-    fun register(username: String, password: String)
-
-    /**
      * Редактирует данные пользователя.
      *
      * @param name ФИО.
@@ -65,8 +57,7 @@ interface UserService {
 
 @Service
 private class UserServiceImpl(
-    private val userRepository: UserRepository,
-    private val emailService: EmailService
+    private val userRepository: UserRepository
 ) : UserService {
 
     override fun getCurrentUser(): User {
@@ -77,19 +68,6 @@ private class UserServiceImpl(
 
     override fun get(username: String): User? {
         return userRepository.findByUsername(username).toNullable()?.toUser()
-    }
-
-    override fun register(username: String, password: String) {
-        if (get(username) != null)
-            throw IllegalStateException("Пользователь $username уже зарегистрирован!")
-        val url = emailService.generateUrl(username)
-
-        val user = User(
-            username = username,
-            password = password,
-            confirmationUrl = url
-        )
-        userRepository.save(user.toUserEntity())
     }
 
     override fun edit(
@@ -117,4 +95,5 @@ private class UserServiceImpl(
         val newUser = user.copy(password = password)
         return userRepository.save(newUser.toUserEntity()).toUser()
     }
+
 }
