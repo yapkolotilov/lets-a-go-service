@@ -1,10 +1,7 @@
 package me.kolotilov.letsagoservice.persistance.entities
 
 import me.kolotilov.letsagoservice.domain.models.Symptom
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "symptom")
@@ -13,15 +10,20 @@ data class SymptomEntity(
     @Id
     val name: String,
     @Column(name = "approved")
-    val approved: Boolean
+    val approved: Boolean,
+    @OneToOne(cascade = [javax.persistence.CascadeType.ALL])
+    @JoinColumn(name = "filter_id")
+    val filter: FilterEntity?
 )
 
 fun SymptomEntity.toSymptom() = Symptom(
     name = name,
-    approved = approved
+    approved = approved,
+    filter = filter?.toFilter()
 )
 
 fun Symptom.toSymptomEntity() = SymptomEntity(
     name = name,
-    approved = approved
+    approved = approved,
+    filter = filter?.toFilterEntity()
 )

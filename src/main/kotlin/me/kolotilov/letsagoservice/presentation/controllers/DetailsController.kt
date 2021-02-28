@@ -41,6 +41,7 @@ class DetailsController(
             weight = details.weight,
             illnesses = details.illnesses?.let { illnessService.getOrCreateAll(details.illnesses) },
             symptoms = details.symptoms?.let { symptomService.getOrCreateAll(details.symptoms) },
+            updateFilter = details.updateFilter
         ).toUserDetailsDto()
     }
 

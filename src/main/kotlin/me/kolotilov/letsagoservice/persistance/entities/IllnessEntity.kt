@@ -1,8 +1,6 @@
 package me.kolotilov.letsagoservice.persistance.entities
 
 import me.kolotilov.letsagoservice.domain.models.Illness
-import org.hibernate.annotations.Cascade
-import org.hibernate.annotations.CascadeType
 import javax.persistence.*
 
 @Table(name = "illness")
@@ -14,19 +12,23 @@ data class IllnessEntity(
     @Column(name = "approved")
     val approved: Boolean,
     @JoinColumn(name = "illness_name")
-    @Cascade(CascadeType.ALL)
-    @OneToMany
-    val symptoms: List<SymptomEntity>
+    @OneToMany(cascade = [CascadeType.ALL])
+    val symptoms: List<SymptomEntity>,
+    @OneToOne(cascade = [javax.persistence.CascadeType.ALL])
+    @JoinColumn(name = "filter_id")
+    val filter: FilterEntity?
 )
 
 fun IllnessEntity.toIllness() = Illness(
     name = name,
     approved = approved,
-    symptoms = symptoms.map { it.toSymptom() }
+    symptoms = symptoms.map { it.toSymptom() },
+    filter = filter?.toFilter()
 )
 
 fun Illness.toIllnessEntity() = IllnessEntity(
     name = name,
     approved = approved,
-    symptoms = symptoms.map { it.toSymptomEntity() }
+    symptoms = symptoms.map { it.toSymptomEntity() },
+    filter = filter?.toFilterEntity()
 )

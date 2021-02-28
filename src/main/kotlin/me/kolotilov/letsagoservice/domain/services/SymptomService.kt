@@ -43,7 +43,7 @@ private class SymptomServiceImpl(
     override fun getOrCreateAll(names: List<String>): List<Symptom> {
         return names.map { name ->
             val symptom = symptomRepository.findByName(name).toNullable()?.toSymptom()
-            symptom ?: symptomRepository.save(Symptom(name, false).toSymptomEntity()).toSymptom()
+            symptom ?: symptomRepository.save(Symptom(name, false, null).toSymptomEntity()).toSymptom()
         }
     }
 
@@ -52,7 +52,7 @@ private class SymptomServiceImpl(
     }
 
     override fun createAll(vararg symptoms: String): List<Symptom> {
-        return symptomRepository.saveAll(symptoms.map { Symptom(it, approved = true).toSymptomEntity() })
+        return symptomRepository.saveAll(symptoms.map { Symptom(it, approved = true, null).toSymptomEntity() })
             .map { it.toSymptom() }
     }
 

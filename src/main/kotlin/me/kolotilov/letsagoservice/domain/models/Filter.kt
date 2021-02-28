@@ -5,7 +5,7 @@ import org.joda.time.Duration
 /**
  * Фильтр маршрутов.
  *
- * @param maxLength Максимальная длина маршрута.
+ * @param maxLength Максимальная длина маршрута (км).
  * @param maxDuration Максимальная продолжительность маршрута.
  * @param typesAllowed Разрешённые типы маршрутов.
  * @param groundsAllowed Разрешённые типы покрытия.
@@ -17,6 +17,26 @@ data class Filter(
         val groundsAllowed: List<Route.Ground>?,
         val id: Int
 ) {
+
+    companion object {
+
+        /**
+         * Возвращает логическое пересечение фильтров.
+         */
+        fun compose(vararg filters: Filter): Filter {
+            return Filter(
+                maxLength = filters.mapNotNull { it.maxLength }.minOrNull(),
+                maxDuration = filters.mapNotNull { it.maxDuration }.minOrNull(),
+                typesAllowed = filters.mapNotNull { it.typesAllowed }.flatten().nullIfEmpty()?.distinct(),
+                groundsAllowed = filters.mapNotNull { it.groundsAllowed }.flatten().nullIfEmpty()?.distinct(),
+                id = 0
+            )
+        }
+
+        private fun <T> List<T>.nullIfEmpty(): List<T>? {
+            return if (isEmpty()) null else this
+        }
+    }
 
     /**
      * Возвращает true, если маршрут удовлетворяет фильтру.

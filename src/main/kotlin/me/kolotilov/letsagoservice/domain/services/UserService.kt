@@ -1,5 +1,6 @@
 package me.kolotilov.letsagoservice.domain.services
 
+import me.kolotilov.letsagoservice.domain.models.Filter
 import me.kolotilov.letsagoservice.domain.models.Illness
 import me.kolotilov.letsagoservice.domain.models.Symptom
 import me.kolotilov.letsagoservice.domain.models.User
@@ -44,7 +45,8 @@ interface UserService {
         height: Int?,
         weight: Int?,
         illnesses: List<Illness>?,
-        symptoms: List<Symptom>?
+        symptoms: List<Symptom>?,
+        updateFilter: Boolean
     ): User
 
     /**
@@ -76,10 +78,11 @@ private class UserServiceImpl(
         height: Int?,
         weight: Int?,
         illnesses: List<Illness>?,
-        symptoms: List<Symptom>?
+        symptoms: List<Symptom>?,
+        updateFilter: Boolean
     ): User {
         val user = getCurrentUser()
-        val newUser = user.copy(
+        var newUser = user.copy(
             name = name ?: user.name,
             age = age ?: user.age,
             height = height ?: user.height,
@@ -87,6 +90,14 @@ private class UserServiceImpl(
             illnesses = illnesses ?: user.illnesses,
             symptoms = symptoms ?: user.symptoms
         )
+        if (updateFilter) {
+            val filters = (newUser.illnesses.map { it.filter } +
+                    newUser.illnesses.map { it.symptoms }.flatten().map { it.filter } +
+                    newUser.symptoms.map { it.filter })
+                .filterNotNull()
+            newUser = newUser.copy(filter = Filter.compose(*filters.toTypedArray()))
+        }
+
         return userRepository.save(newUser.toUserEntity()).toUser()
     }
 

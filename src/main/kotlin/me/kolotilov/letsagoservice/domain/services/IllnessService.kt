@@ -46,7 +46,7 @@ private class IllnessServiceImpl(
     override fun getOrCreateAll(names: List<String>): List<Illness> {
         return names.map { name ->
             val illness = illnessRepository.findByName(name).toNullable()?.toIllness()
-            illness ?: illnessRepository.save(Illness(name, false, emptyList()).toIllnessEntity()).toIllness()
+            illness ?: illnessRepository.save(Illness(name, false, emptyList(), null).toIllnessEntity()).toIllness()
         }
     }
 

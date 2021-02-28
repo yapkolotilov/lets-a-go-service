@@ -1,7 +1,9 @@
 package me.kolotilov.letsagoservice.persistance.entities
 
 import me.kolotilov.letsagoservice.domain.models.Filter
-import org.joda.time.Duration
+import me.kolotilov.letsagoservice.utils.toDate
+import me.kolotilov.letsagoservice.utils.toDuration
+import java.util.*
 import javax.persistence.*
 
 @Entity(name = "filter")
@@ -9,7 +11,7 @@ data class FilterEntity(
     @Column(name = "max_length")
     val maxLength: Double?,
     @Column(name = "max_duration")
-    val maxDuration: Duration?,
+    val maxDuration: Date?,
     @OneToMany(cascade = [CascadeType.ALL])
     @JoinColumn(name = "filter_id")
     val typesAllowed: List<RouteTypeEntity>?,
@@ -23,7 +25,7 @@ data class FilterEntity(
 
 fun Filter.toFilterEntity() = FilterEntity(
     maxLength = maxLength,
-    maxDuration = maxDuration,
+    maxDuration = maxDuration?.toDate(),
     typesAllowed = typesAllowed?.map { it.toRouteTypeEntity() },
     groundsAllowed = groundsAllowed?.map { it.toRouteGroundEntity() },
     id = id
@@ -31,7 +33,7 @@ fun Filter.toFilterEntity() = FilterEntity(
 
 fun FilterEntity.toFilter() = Filter(
     maxLength = maxLength,
-    maxDuration = maxDuration,
+    maxDuration = maxDuration?.toDuration(),
     typesAllowed = typesAllowed?.map { it.toRouteType() },
     groundsAllowed = groundsAllowed?.map { it.toRouteGround() },
     id = id
