@@ -1,5 +1,6 @@
 package me.kolotilov.letsagoservice.presentation.input
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import me.kolotilov.letsagoservice.domain.models.Filter
@@ -13,12 +14,16 @@ import javax.validation.constraints.Positive
 data class FilterDto(
     @Positive
     @ApiModelProperty("Максимальная длина маршрута (м).")
+    @JsonProperty("max_length")
     val maxLength: Double?,
     @ApiModelProperty("Максимальная продолжительность маршрута")
+    @JsonProperty("max_duration")
     val maxDuration: Date?,
     @ApiModelProperty("Разрешённые типы маршрутов")
+    @JsonProperty("types_allowed")
     val typesAllowed: List<Route.Type>?,
     @ApiModelProperty("Разрешённые покрытия маршрутов.")
+    @JsonProperty("grounds_allowed")
     val groundsAllowed: List<Route.Ground>?
 )
 

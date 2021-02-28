@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import me.kolotilov.letsagoservice.domain.models.User
+import me.kolotilov.letsagoservice.presentation.input.FilterDto
+import me.kolotilov.letsagoservice.presentation.input.toFilterDto
 
 @ApiModel("UserDetailsDto: Данные о пользователе")
 data class UserDetailsDto(
@@ -27,7 +29,10 @@ data class UserDetailsDto(
     val illnesses: List<String>,
     @ApiModelProperty("Симптомы.")
     @JsonProperty("symptoms")
-    val symptoms: List<String>
+    val symptoms: List<String>,
+    @ApiModelProperty("Фильтр")
+    @JsonProperty("filter")
+    val filter: FilterDto
 )
 
 fun User.toUserDetailsDto() = UserDetailsDto(
@@ -37,5 +42,6 @@ fun User.toUserDetailsDto() = UserDetailsDto(
     height = if (height > 0) height else null,
     weight = if (weight > 0) weight else null,
     illnesses = illnesses.map { it.name },
-    symptoms = symptoms.map { it.name }
+    symptoms = symptoms.map { it.name },
+    filter = filter.toFilterDto()
 )

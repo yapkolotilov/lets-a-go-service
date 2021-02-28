@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 class MapController(
     private val mapService: MapService,
     private val userService: UserService
-) {
+) : BaseController("MAP") {
 
     @ApiOperation("Возвращает список всех маршрутов на карте.")
     @GetMapping("/routes")
@@ -24,7 +24,7 @@ class MapController(
         @RequestBody filter: FilterDto?
     ): List<RoutePreviewDto> {
         return mapService.getAllRoutes(filter?.toFilter())
-            .map { it.toRoutePreviewDto(userService.getCurrentUser(), filter?.toFilter()) }
+            .map { it.toRoutePreviewDto() }
     }
 
     @ApiOperation("Возвращает маршрут по id.")
@@ -48,7 +48,7 @@ class MapController(
         filter: FilterDto?
     ): List<RoutePreviewDto> {
         return mapService.findRoutes(name, filter?.toFilter())
-            .map { it.toRoutePreviewDto(userService.getCurrentUser(), filter?.toFilter()) }
+            .map { it.toRoutePreviewDto() }
     }
 
     @ApiOperation("Создание маршрута.")
@@ -58,7 +58,7 @@ class MapController(
         @RequestBody
         route: CreateRouteDto
     ): RouteDetailsDto {
-        return mapService.createRoute(route.toRoute(userService.getCurrentUser())).toRouteDetailsDto()
+        return mapService.createRoute(route.toRoute()).toRouteDetailsDto()
     }
 
     @ApiOperation("Редактирование маршрута.")
@@ -72,9 +72,7 @@ class MapController(
         route: EditRouteDto
     ): RouteDetailsDto {
         val oldRoute = mapService.getRoute(id)
-        return mapService.editRoute(
-            route.toRoute(oldRoute).copy(id = id)
-        ).toRouteDetailsDto()
+        return mapService.editRoute(route.toRoute(oldRoute)).toRouteDetailsDto()
     }
 
     @ApiOperation("Удаление маршрута.")
@@ -88,14 +86,16 @@ class MapController(
     }
 
     @ApiOperation("Создание прохода.")
-    @PostMapping("/entries")
+    @PostMapping("/routes/{id}/entries")
     fun createEntry(
+        @ApiParam("ID маршрута.")
+        @PathVariable("id")
+        id: Int,
         @ApiParam("Параметры прохода.")
         @RequestBody
         createEntryDto: CreateEntryDto
     ): RouteDetailsDto {
-        val route = mapService.getRoute(createEntryDto.routeId)
-        return mapService.createEntry(route.id, createEntryDto.toEntry(route, userService.getCurrentUser()))
+        return mapService.createEntry(id, createEntryDto.toEntry())
             .toRouteDetailsDto()
     }
 

@@ -4,6 +4,7 @@ import me.kolotilov.letsagoservice.domain.models.Filter
 import me.kolotilov.letsagoservice.domain.models.Illness
 import me.kolotilov.letsagoservice.domain.models.Route
 import me.kolotilov.letsagoservice.domain.models.Symptom
+import me.kolotilov.letsagoservice.domain.services.EntitiesService
 import me.kolotilov.letsagoservice.domain.services.IllnessService
 import me.kolotilov.letsagoservice.domain.services.SymptomService
 import org.joda.time.Duration
@@ -13,12 +14,14 @@ import javax.annotation.PostConstruct
 @Component
 class DatabaseInitializer(
     private val symptomService: SymptomService,
-    private val illnessService: IllnessService
+    private val illnessService: IllnessService,
+    private val entitiesService: EntitiesService
 ) {
 
     @PostConstruct
     fun initialize() {
-        symptomService.clear()
+        entitiesService.clear()
+
         symptomService.createAll(
             "Тяжесть",
             "Боли в ногах",
@@ -27,7 +30,6 @@ class DatabaseInitializer(
             "Отёчность"
         )
 
-        illnessService.clear()
         illnessService.createAll(
             Illness(
                 "Варикоз", true, listOf(
@@ -39,7 +41,7 @@ class DatabaseInitializer(
                     maxDuration = null,
                     typesAllowed = listOf(Route.Type.WALKING),
                     groundsAllowed = Route.Ground.values().toList(),
-                    id = 0
+                    id = 1
                 )
             ),
             Illness(
@@ -51,7 +53,7 @@ class DatabaseInitializer(
                     maxDuration = Duration.standardHours(1),
                     typesAllowed = listOf(Route.Type.WALKING),
                     groundsAllowed = listOf(Route.Ground.ASPHALT),
-                    id = 0
+                    id = 2
                 )
             ),
             Illness(

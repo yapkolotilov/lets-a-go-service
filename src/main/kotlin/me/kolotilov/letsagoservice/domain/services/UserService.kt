@@ -46,6 +46,7 @@ interface UserService {
         weight: Int?,
         illnesses: List<Illness>?,
         symptoms: List<Symptom>?,
+        filter: Filter?,
         updateFilter: Boolean
     ): User
 
@@ -79,6 +80,7 @@ private class UserServiceImpl(
         weight: Int?,
         illnesses: List<Illness>?,
         symptoms: List<Symptom>?,
+        filter: Filter?,
         updateFilter: Boolean
     ): User {
         val user = getCurrentUser()
@@ -88,7 +90,8 @@ private class UserServiceImpl(
             height = height ?: user.height,
             weight = weight ?: user.weight,
             illnesses = illnesses ?: user.illnesses,
-            symptoms = symptoms ?: user.symptoms
+            symptoms = symptoms ?: user.symptoms,
+            filter = filter ?: user.filter
         )
         if (updateFilter) {
             val filters = (newUser.illnesses.map { it.filter } +

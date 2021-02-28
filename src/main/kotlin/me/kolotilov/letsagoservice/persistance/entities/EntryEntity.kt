@@ -7,15 +7,11 @@ import me.kolotilov.letsagoservice.utils.toDuration
 import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.ManyToOne
 
 @Entity(name = "entry")
 data class EntryEntity(
-        @ManyToOne
-        val user: UserEntity,
-        @ManyToOne
-        val route: RouteEntity,
         @Column(name = "timestamp")
         val timestamp: Date,
         @Column(name = "duration")
@@ -23,13 +19,12 @@ data class EntryEntity(
         @Column(name = "finished")
         val finished: Boolean,
         @Id
+        @GeneratedValue
         @Column(name = "id")
         val id: Int
 )
 
 fun Entry.toEntryEntity() = EntryEntity(
-        user = user.toUserEntity(),
-        route = route.toRouteEntity(),
         timestamp = timestamp.toDate(),
         duration = duration.toDate(),
         finished = finished,
@@ -37,8 +32,6 @@ fun Entry.toEntryEntity() = EntryEntity(
 )
 
 fun EntryEntity.toEntry() = Entry(
-        user = user.toUser(),
-        route = route.toRoute(),
         timestamp = timestamp.toDateTime(),
         duration = duration.toDuration(),
         finished = finished,

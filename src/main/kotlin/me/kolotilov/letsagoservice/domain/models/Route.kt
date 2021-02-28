@@ -21,8 +21,7 @@ data class Route(
         val ground: Ground?,
         val points: List<Point>,
         val entries: List<Entry>,
-        val owner: User,
-        val id: Int = 0,
+        val id: Int,
 ) {
 
     /**
@@ -83,7 +82,8 @@ data class Route(
      */
     fun duration(): Duration {
         val validEntries = entries.filter { it.finished }
-        val midDuration = validEntries.sumByDouble { it.duration.millis.toDouble() }.toLong() / validEntries.size
+        val midDuration = validEntries.sumByDouble { it.duration.millis.toDouble() }.toLong() /
+                (validEntries.size.takeIf { it != 0 } ?: 1)
         return Duration(midDuration)
     }
 

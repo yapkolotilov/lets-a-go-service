@@ -19,11 +19,10 @@ data class RouteEntity(
         @OneToMany(cascade = [CascadeType.ALL])
         @JoinColumn(name = "route_id")
         val entries: List<EntryEntity>,
-        @OneToOne(cascade = [CascadeType.ALL])
-        val owner: UserEntity,
         @Id
+        @GeneratedValue
         @Column(name = "id")
-        val id: Int = 0,
+        val id: Int,
 )
 
 @Entity(name = "route_type")
@@ -59,7 +58,6 @@ fun Route.toRouteEntity(): RouteEntity = RouteEntity(
         ground = ground?.toRouteGroundEntity(),
         points = points.map { it.toPointEntity() },
         entries = entries.map { it.toEntryEntity() },
-        owner = owner.toUserEntity(),
         id = id
 )
 
@@ -70,6 +68,5 @@ fun RouteEntity.toRoute(): Route = Route(
         ground = ground?.toRouteGround(),
         points = points.map { it.toPoint() },
         entries = entries.map { it.toEntry() },
-        owner = owner.toUser(),
         id = id
 )

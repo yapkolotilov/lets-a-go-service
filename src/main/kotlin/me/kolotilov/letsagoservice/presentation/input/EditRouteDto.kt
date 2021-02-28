@@ -25,5 +25,6 @@ fun EditRouteDto.toRoute(route: Route) = route.copy(
     name = name ?: route.name,
     difficulty = difficulty ?: route.difficulty,
     type = type ?: route.type,
-    ground = ground ?: route.ground
+    ground = ground ?: route.ground,
+    id = route.id
 )

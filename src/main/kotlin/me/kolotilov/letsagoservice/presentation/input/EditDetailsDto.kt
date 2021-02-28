@@ -36,6 +36,10 @@ data class EditDetailsDto(
     @JsonProperty("symptoms")
     val symptoms: List<String>?,
 
+    @ApiModelProperty("Фильтр.")
+    @JsonProperty("filter")
+    val filter: FilterDto?,
+
     @ApiModelProperty("Обновлять ли фильтр.")
     @JsonProperty("update_filter")
     val updateFilter: Boolean

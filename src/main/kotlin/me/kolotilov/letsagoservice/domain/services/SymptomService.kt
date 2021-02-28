@@ -28,11 +28,6 @@ interface SymptomService {
      * Создаёт симптомы.
      */
     fun createAll(vararg symptoms: String): List<Symptom>
-
-    /**
-     * Очищает базу симптомов.
-     */
-    fun clear()
 }
 
 @Service
@@ -54,9 +49,5 @@ private class SymptomServiceImpl(
     override fun createAll(vararg symptoms: String): List<Symptom> {
         return symptomRepository.saveAll(symptoms.map { Symptom(it, approved = true, null).toSymptomEntity() })
             .map { it.toSymptom() }
-    }
-
-    override fun clear() {
-        symptomRepository.deleteAll()
     }
 }

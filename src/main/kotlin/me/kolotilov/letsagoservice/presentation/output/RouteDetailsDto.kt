@@ -1,11 +1,13 @@
 package me.kolotilov.letsagoservice.presentation.output
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import me.kolotilov.letsagoservice.domain.models.Route
 import me.kolotilov.letsagoservice.utils.toDate
 import java.util.*
 
+@ApiModel("RouteDetailsDto: Детали маршрута.")
 class RouteDetailsDto(
     @ApiModelProperty("Название.")
     @JsonProperty("name")
@@ -25,12 +27,12 @@ class RouteDetailsDto(
     @ApiModelProperty("Длительность маршрута.")
     @JsonProperty("duration")
     val duration: Date,
+    @ApiModelProperty("Длина маршрута (м).")
+    @JsonProperty("length")
+    val length: Double,
     @ApiModelProperty("Походы.")
     @JsonProperty("entries")
     val entries: List<EntryDto>,
-    @ApiModelProperty("username владельца.")
-    @JsonProperty("owner_name")
-    val ownerName: String,
     @ApiModelProperty("ID")
     @JsonProperty("id")
     val id: Int
@@ -44,6 +46,6 @@ fun Route.toRouteDetailsDto() = RouteDetailsDto(
     ground = ground,
     duration = duration().toDate(),
     entries = entries.map { it.toEntryDto() },
-    ownerName = owner.username,
+    length = length(),
     id = id
 )

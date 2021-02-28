@@ -26,11 +26,6 @@ interface IllnessService {
     fun getAllApproved(): List<Illness>
 
     /**
-     * Очищает базу заболеваний.
-     */
-    fun clear()
-
-    /**
      * Создаёт новые заболевания.
      *
      * @param illnesses Заболевания.
@@ -52,10 +47,6 @@ private class IllnessServiceImpl(
 
     override fun getAllApproved(): List<Illness> {
         return illnessRepository.findAllByApprovedTrue().map { it.toIllness() }
-    }
-
-    override fun clear() {
-        illnessRepository.deleteAll()
     }
 
     override fun createAll(vararg illnesses: Illness): List<Illness> {

@@ -8,6 +8,7 @@ import me.kolotilov.letsagoservice.domain.services.SymptomService
 import me.kolotilov.letsagoservice.domain.services.UserService
 import me.kolotilov.letsagoservice.presentation.input.ChangePasswordDto
 import me.kolotilov.letsagoservice.presentation.input.EditDetailsDto
+import me.kolotilov.letsagoservice.presentation.input.toFilter
 import me.kolotilov.letsagoservice.presentation.output.UserDetailsDto
 import me.kolotilov.letsagoservice.presentation.output.toUserDetailsDto
 import org.springframework.web.bind.annotation.*
@@ -41,7 +42,8 @@ class DetailsController(
             weight = details.weight,
             illnesses = details.illnesses?.let { illnessService.getOrCreateAll(details.illnesses) },
             symptoms = details.symptoms?.let { symptomService.getOrCreateAll(details.symptoms) },
-            updateFilter = details.updateFilter
+            filter = details.filter?.toFilter(),
+            updateFilter = details.updateFilter,
         ).toUserDetailsDto()
     }
 

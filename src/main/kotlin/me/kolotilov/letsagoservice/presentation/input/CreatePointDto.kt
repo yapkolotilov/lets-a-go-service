@@ -1,13 +1,14 @@
-package me.kolotilov.letsagoservice.presentation.output
+package me.kolotilov.letsagoservice.presentation.input
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import me.kolotilov.letsagoservice.domain.models.Point
+import me.kolotilov.letsagoservice.utils.toDateTime
 import java.util.*
 
-@ApiModel("PointDto: Точка маршрута.")
-data class PointDto(
+@ApiModel("CreatePointDto: Создание точки.")
+data class CreatePointDto(
     @ApiModelProperty("Широта.")
     @JsonProperty("latitude")
     val latitude: Double,
@@ -16,15 +17,12 @@ data class PointDto(
     val longitude: Double,
     @ApiModelProperty("Время.")
     @JsonProperty("timestamp")
-    val timestamp: Date,
-    @ApiModelProperty("ID точки.")
-    @JsonProperty("id")
-    val id: Int
+    val timestamp: Date
 )
 
-fun Point.toPointDto() = PointDto(
+fun CreatePointDto.toPoint() = Point(
     latitude = latitude,
     longitude = longitude,
-    timestamp = timestamp.toDate(),
-    id = id
+    timestamp = timestamp.toDateTime(),
+    id = 0
 )

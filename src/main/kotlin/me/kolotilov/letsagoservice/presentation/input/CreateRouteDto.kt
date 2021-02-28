@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import me.kolotilov.letsagoservice.domain.models.Route
-import me.kolotilov.letsagoservice.domain.models.User
-import me.kolotilov.letsagoservice.presentation.output.PointDto
-import me.kolotilov.letsagoservice.presentation.output.toPoint
+import javax.validation.constraints.NotEmpty
 
 @ApiModel("CreateRouteDto: Создание маршрута.")
 data class CreateRouteDto(
@@ -15,24 +13,25 @@ data class CreateRouteDto(
     val name: String?,
     @ApiModelProperty("Сложность.")
     @JsonProperty("difficulty")
-    val difficulty: Int,
+    val difficulty: Int?,
     @ApiModelProperty("Тип.")
     @JsonProperty("type")
-    val type: Route.Type,
+    val type: Route.Type?,
     @ApiModelProperty("Тип покрытия.")
     @JsonProperty("ground")
-    val ground: Route.Ground,
+    val ground: Route.Ground?,
     @ApiModelProperty("Точки.")
     @JsonProperty("points")
-    val points: List<PointDto>
+    @NotEmpty
+    val points: List<CreatePointDto>
 )
 
-fun CreateRouteDto.toRoute(owner: User) = Route(
+fun CreateRouteDto.toRoute() = Route(
     name = name,
     difficulty = difficulty,
     type = type,
     ground = ground,
     points = points.map { it.toPoint() },
     entries = emptyList(),
-    owner = owner
+    id = 0
 )

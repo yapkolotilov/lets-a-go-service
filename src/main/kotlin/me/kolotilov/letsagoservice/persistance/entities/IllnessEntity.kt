@@ -14,7 +14,7 @@ data class IllnessEntity(
     @JoinColumn(name = "illness_name")
     @OneToMany(cascade = [CascadeType.ALL])
     val symptoms: List<SymptomEntity>,
-    @OneToOne(cascade = [javax.persistence.CascadeType.ALL])
+    @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "filter_id")
     val filter: FilterEntity?
 )

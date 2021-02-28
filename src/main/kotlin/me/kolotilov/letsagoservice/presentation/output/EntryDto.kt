@@ -9,12 +9,6 @@ import java.util.*
 
 @ApiModel("EntryDto: Поход.")
 data class EntryDto(
-    @ApiModelProperty("Имя пользователя.")
-    @JsonProperty("username")
-    val username: String,
-    @ApiModelProperty("Маршрут.")
-    @JsonProperty("route")
-    val route: RoutePreviewDto,
     @ApiModelProperty("Время начала.")
     @JsonProperty("timestamp")
     val timestamp: Date,
@@ -30,8 +24,6 @@ data class EntryDto(
 )
 
 fun Entry.toEntryDto() = EntryDto(
-    username = user.username,
-    route = route.toRoutePreviewDto(user, null),
     timestamp = timestamp.toDate(),
     duration = duration.toDate(),
     finished = finished,

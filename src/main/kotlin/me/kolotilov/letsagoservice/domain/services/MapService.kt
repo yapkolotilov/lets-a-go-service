@@ -3,7 +3,6 @@ package me.kolotilov.letsagoservice.domain.services
 import me.kolotilov.letsagoservice.domain.models.Entry
 import me.kolotilov.letsagoservice.domain.models.Filter
 import me.kolotilov.letsagoservice.domain.models.Route
-import me.kolotilov.letsagoservice.persistance.entities.toEntry
 import me.kolotilov.letsagoservice.persistance.entities.toRoute
 import me.kolotilov.letsagoservice.persistance.entities.toRouteEntity
 import me.kolotilov.letsagoservice.persistance.repositories.EntryRepository
@@ -130,7 +129,6 @@ private class MapServiceImpl(
     }
 
     override fun getAllEntries(): List<Entry> {
-        return entryRepository.findAllByUserUsername(userService.getCurrentUser().username)
-            .map { it.toEntry() }
+        return userService.getCurrentUser().entries
     }
 }

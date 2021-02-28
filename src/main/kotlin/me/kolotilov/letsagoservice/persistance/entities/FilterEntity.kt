@@ -19,6 +19,7 @@ data class FilterEntity(
     @JoinColumn(name = "filter_id")
     val groundsAllowed: List<RouteGroundEntity>?,
     @Id
+    @GeneratedValue
     @Column(name = "id")
     val id: Int
 )
