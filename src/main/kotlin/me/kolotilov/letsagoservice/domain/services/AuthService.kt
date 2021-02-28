@@ -50,7 +50,7 @@ class AuthServiceImpl(
         val user = User(
             username = username,
             password = password,
-            confirmationUrl = url
+            confirmationUrl = "" // TODO
         )
         userRepository.save(user.toUserEntity())
     }
