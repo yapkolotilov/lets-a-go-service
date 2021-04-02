@@ -3,7 +3,9 @@ package me.kolotilov.letsagoservice.presentation.output
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
+import me.kolotilov.letsagoservice.domain.models.Point
 import me.kolotilov.letsagoservice.domain.models.Route
+import org.joda.time.DateTime
 
 @ApiModel("RoutePreviewDto: Превью маршрута.")
 data class RoutePreviewDto(
@@ -29,7 +31,7 @@ data class RoutePreviewDto(
 
 fun Route.toRoutePreviewDto() = RoutePreviewDto(
     name = name,
-    startPoint = points.first().toPointDto(),
+    startPoint = points.firstOrNull()?.toPointDto() ?: Point(0.0, 0.0, DateTime.now(), 0).toPointDto(),
     type = type,
     ground = ground,
     length = length(),
