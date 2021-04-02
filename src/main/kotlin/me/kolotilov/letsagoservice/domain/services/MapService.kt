@@ -75,6 +75,8 @@ interface MapService {
      * Возвращает все походы по юзеру.
      */
     fun getAllEntries(): List<Entry>
+
+    fun clearRoutes()
 }
 
 @Service
@@ -130,5 +132,9 @@ private class MapServiceImpl(
 
     override fun getAllEntries(): List<Entry> {
         return userService.getCurrentUser().entries
+    }
+
+    override fun clearRoutes() {
+        routeRepository.deleteAll()
     }
 }

@@ -3,7 +3,11 @@ package me.kolotilov.letsagoservice.presentation.input
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
+import me.kolotilov.letsagoservice.domain.models.Entry
 import me.kolotilov.letsagoservice.domain.models.Route
+import me.kolotilov.letsagoservice.domain.models.duration
+import me.kolotilov.letsagoservice.utils.toDateTime
+import org.joda.time.DateTime
 import javax.validation.constraints.NotEmpty
 
 @ApiModel("CreateRouteDto: Создание маршрута.")
@@ -32,6 +36,13 @@ fun CreateRouteDto.toRoute() = Route(
     type = type,
     ground = ground,
     points = points.map { it.toPoint() },
-    entries = emptyList(),
+    entries = listOf(
+        Entry(
+            timestamp = points.firstOrNull()?.timestamp?.toDateTime() ?: DateTime.now(),
+            duration = points.map { it.toPoint() }.duration(),
+            finished = true,
+            id = 0
+        )
+    ),
     id = 0
 )
