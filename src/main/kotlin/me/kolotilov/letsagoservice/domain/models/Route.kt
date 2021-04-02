@@ -64,8 +64,6 @@ data class Route(
      */
     fun length(): Double {
         var result = 0.0
-        if (entries.isEmpty())
-            return 0.0
         for (i in 0..points.size - 2) {
             val p1 = points[i]
             val p2 = points[i + 1]
@@ -84,8 +82,6 @@ data class Route(
      */
     fun duration(): Duration {
         val validEntries = entries.filter { it.finished }
-        if (validEntries.isEmpty())
-            return Duration(0)
         val midDuration = validEntries.sumByDouble { it.duration.millis.toDouble() }.toLong() /
                 (validEntries.size.takeIf { it != 0 } ?: 1)
         return Duration(midDuration)

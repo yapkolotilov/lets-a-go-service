@@ -19,7 +19,8 @@ class CustomExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleConflict(e: Exception, request: WebRequest): ResponseEntity<*> {
         val status = if (e is HttpStatusCodeException) e.statusCode else HttpStatus.BAD_REQUEST
         val body = linkedMapOf(
-            "error" to e.message
+            "error" to e.message,
+            "errorTrace" to e.stackTraceToString()
         )
         logger.error(e)
         e.printStackTrace()
