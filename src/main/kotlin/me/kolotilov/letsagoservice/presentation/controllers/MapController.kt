@@ -46,9 +46,9 @@ class MapController(
         @ApiParam("Фильтр.")
         @RequestBody
         filter: FilterDto?
-    ): List<RoutePreviewDto> {
+    ): List<RouteDetailsDto> {
         return mapService.findRoutes(name, filter?.toFilter())
-            .map { it.toRoutePreviewDto() }
+            .map { it.toRouteDetailsDto() }
     }
 
     @ApiOperation("Создание маршрута.")
