@@ -5,9 +5,6 @@ import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import me.kolotilov.letsagoservice.domain.models.Entry
 import me.kolotilov.letsagoservice.domain.models.Route
-import me.kolotilov.letsagoservice.domain.models.duration
-import me.kolotilov.letsagoservice.utils.toDateTime
-import org.joda.time.DateTime
 import javax.validation.constraints.NotEmpty
 
 @ApiModel("CreateRouteDto: Создание маршрута.")
@@ -38,9 +35,7 @@ fun CreateRouteDto.toRoute() = Route(
     points = points.map { it.toPoint() },
     entries = listOf(
         Entry(
-            timestamp = points.firstOrNull()?.timestamp?.toDateTime() ?: DateTime.now(),
-            duration = points.map { it.toPoint() }.duration(),
-            finished = true,
+            points = points.map { it.toPoint() },
             id = 0
         )
     ),

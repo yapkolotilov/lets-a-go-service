@@ -81,8 +81,8 @@ data class Route(
      * Продолжительность маршрута.
      */
     fun duration(): Duration {
-        val validEntries = entries.filter { it.finished }
-        val midDuration = validEntries.sumByDouble { it.duration.millis.toDouble() }.toLong() /
+        val validEntries = entries.filter { it.finished(this) }
+        val midDuration = validEntries.sumByDouble { it.duration().millis.toDouble() }.toLong() /
                 (validEntries.size.takeIf { it != 0 } ?: 1)
         return Duration(midDuration)
     }
