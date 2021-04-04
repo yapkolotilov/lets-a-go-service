@@ -18,7 +18,7 @@ interface MapService {
     /**
      * Возвращает список всех маршрутов.
      */
-    fun getAllRoutes(filter: Filter?): List<Route>
+    fun getAllRoutes(filter: Boolean): List<Route>
 
     /**
      * Возвращает маршрут по id.
@@ -86,10 +86,15 @@ private class MapServiceImpl(
     private val userService: UserService
 ) : MapService {
 
-    override fun getAllRoutes(filter: Filter?): List<Route> {
+    override fun getAllRoutes(filter: Boolean): List<Route> {
         return routeRepository.findAll()
             .map { it.toRoute() }
-            .filter { filter?.matches(it) ?: true }
+            .filter {
+                if (filter)
+                    userService.getCurrentUser().filter.matches(it)
+                else
+                    true
+            }
     }
 
     override fun getRoute(id: Int): Route {

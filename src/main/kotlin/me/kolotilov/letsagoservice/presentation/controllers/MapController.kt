@@ -24,9 +24,9 @@ class MapController(
     @GetMapping("/routes")
     fun getAllRoutes(
         @ApiParam("Фильтр.")
-        @RequestBody filter: FilterDto?
+        @RequestParam("filter") filter: Boolean
     ): List<RouteDetailsDto> {
-        return mapService.getAllRoutes(filter?.toFilter())
+        return mapService.getAllRoutes(filter)
             .map { it.toRouteDetailsDto() }
     }
 

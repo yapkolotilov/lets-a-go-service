@@ -6,7 +6,7 @@ import javax.persistence.*
 @Entity(name = "entry")
 data class EntryEntity(
         @OneToMany(cascade = [CascadeType.ALL])
-        @JoinColumn(name = "route_id")
+        @JoinColumn(name = "entry_id")
         val points: List<PointEntity>,
         @Id
         @GeneratedValue
