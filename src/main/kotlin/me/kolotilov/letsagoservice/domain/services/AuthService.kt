@@ -1,10 +1,13 @@
 package me.kolotilov.letsagoservice.domain.services
 
+import me.kolotilov.letsagoservice.configuration.ErrorCode
+import me.kolotilov.letsagoservice.configuration.ServiceException
 import me.kolotilov.letsagoservice.domain.models.User
 import me.kolotilov.letsagoservice.persistance.entities.toUser
 import me.kolotilov.letsagoservice.persistance.entities.toUserEntity
 import me.kolotilov.letsagoservice.persistance.repositories.UserRepository
 import me.kolotilov.letsagoservice.utils.toNullable
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import kotlin.random.Random
 
@@ -44,7 +47,17 @@ class AuthServiceImpl(
 
     override fun register(username: String, password: String) {
         if (get(username) != null)
-            throw IllegalStateException("Пользователь $username уже зарегистрирован!")
+            throw ServiceException(
+                code = ErrorCode.USER_ALREADY_EXITS,
+                status = HttpStatus.BAD_REQUEST,
+                message = "Пользователь $username уже зарегистрирован"
+            )
+        if (password.length < 8)
+            throw ServiceException(
+                code = ErrorCode.INVALID_PASSWORD,
+                status = HttpStatus.BAD_REQUEST,
+                message = "Пароль должен быть не короче 8 символов"
+            )
         val url = generateUrl(username)
 
         val user = User(

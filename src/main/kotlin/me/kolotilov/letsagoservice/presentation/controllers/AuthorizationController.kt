@@ -3,8 +3,10 @@ package me.kolotilov.letsagoservice.presentation.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
+import me.kolotilov.letsagoservice.configuration.ErrorCode
 import me.kolotilov.letsagoservice.configuration.authorization.JwtUtils
 import me.kolotilov.letsagoservice.configuration.authorization.UserDetailsServiceImpl
+import me.kolotilov.letsagoservice.configuration.toServiceException
 import me.kolotilov.letsagoservice.domain.services.AuthService
 import me.kolotilov.letsagoservice.presentation.input.LoginDto
 import me.kolotilov.letsagoservice.presentation.output.TokenDto
@@ -13,9 +15,10 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
 
 @Api("Авторизация в приложении.")
 @RestController
@@ -46,21 +49,31 @@ class AuthorizationController(
         @RequestBody request: LoginDto
     ): TokenDto {
         return try {
-            authenticationManager.authenticate(UsernamePasswordAuthenticationToken(request.username, request.password))
             val userDetails = userDetailsService.loadUserByUsername(request.username)
+            authenticationManager.authenticate(UsernamePasswordAuthenticationToken(request.username, request.password))
             val jwt = jwtUtils.generateToken(userDetails)
             TokenDto(jwt)
-        } catch (e: Exception) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неправильные логин или пароль")
+        } catch (e: UsernameNotFoundException) {
+            throw e.toServiceException(
+                code = ErrorCode.USER_NOT_EXISTS,
+                status = HttpStatus.UNAUTHORIZED,
+                message = "Пользователя не существует",
+            )
+        } catch (e: AuthenticationException) {
+            throw e.toServiceException(
+                code = ErrorCode.INVALID_PASSWORD,
+                status = HttpStatus.UNAUTHORIZED,
+                message = "Неправильный пароль",
+            )
         }
     }
 
     @ApiOperation("Подтверждение e-mail")
     @GetMapping("/confirm_email/{url}")
     fun confirmEmail(@PathVariable("url") url: String): String {
-        if (authService.confirmEmail(url))
-            return "e-mail подтверждён"
+        return if (authService.confirmEmail(url))
+            "e-mail подтверждён"
         else
-            return "Некорректный URL"
+            "Некорректный URL"
     }
 }
