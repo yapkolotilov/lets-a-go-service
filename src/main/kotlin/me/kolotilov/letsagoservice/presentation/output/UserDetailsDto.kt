@@ -6,6 +6,9 @@ import io.swagger.annotations.ApiModelProperty
 import me.kolotilov.letsagoservice.domain.models.User
 import me.kolotilov.letsagoservice.presentation.input.FilterDto
 import me.kolotilov.letsagoservice.presentation.input.toFilterDto
+import org.joda.time.DateTime
+import org.joda.time.Years
+import java.util.*
 
 @ApiModel("UserDetailsDto: Данные о пользователе")
 data class UserDetailsDto(
@@ -14,16 +17,19 @@ data class UserDetailsDto(
     val username: String,
     @ApiModelProperty("ФИО")
     @JsonProperty("name")
-    val name: String,
+    val name: String?,
     @ApiModelProperty("Возраст.")
     @JsonProperty("age")
-    val age: Int? = null,
+    val age: Int?,
+    @ApiModelProperty("Дата рождения.")
+    @JsonProperty("birthDate")
+    val birthDate: Date?,
     @ApiModelProperty("Рост.")
     @JsonProperty("height")
-    val height: Int? = null,
+    val height: Int?,
     @ApiModelProperty("Вес.")
     @JsonProperty("weight")
-    val weight: Int? = null,
+    val weight: Int? ,
     @ApiModelProperty("Болезни.")
     @JsonProperty("illnesses")
     val illnesses: List<String>,
@@ -38,9 +44,10 @@ data class UserDetailsDto(
 fun User.toUserDetailsDto() = UserDetailsDto(
     username = username,
     name = name,
-    age = if (age > 0) age else null,
-    height = if (height > 0) height else null,
-    weight = if (weight > 0) weight else null,
+    age = birthDate?.let { Years.yearsBetween(it, DateTime.now()) }?.years,
+    birthDate = birthDate?.toDate(),
+    height = height,
+    weight = weight,
     illnesses = illnesses.map { it.name },
     symptoms = symptoms.map { it.name },
     filter = filter.toFilterDto()

@@ -9,6 +9,7 @@ import me.kolotilov.letsagoservice.persistance.entities.toUserEntity
 import me.kolotilov.letsagoservice.persistance.repositories.UserRepository
 import me.kolotilov.letsagoservice.utils.castTo
 import me.kolotilov.letsagoservice.utils.toNullable
+import org.joda.time.DateTime
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 
@@ -41,7 +42,7 @@ interface UserService {
      */
     fun edit(
         name: String?,
-        age: Int?,
+        birthDate: DateTime?,
         height: Int?,
         weight: Int?,
         illnesses: List<Illness>?,
@@ -75,7 +76,7 @@ private class UserServiceImpl(
 
     override fun edit(
         name: String?,
-        age: Int?,
+        birthDate: DateTime?,
         height: Int?,
         weight: Int?,
         illnesses: List<Illness>?,
@@ -86,7 +87,7 @@ private class UserServiceImpl(
         val user = getCurrentUser()
         var newUser = user.copy(
             name = name ?: user.name,
-            age = age ?: user.age,
+            birthDate = birthDate ?: user.birthDate,
             height = height ?: user.height,
             weight = weight ?: user.weight,
             illnesses = illnesses ?: user.illnesses,

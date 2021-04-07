@@ -1,6 +1,8 @@
 package me.kolotilov.letsagoservice.persistance.entities
 
 import me.kolotilov.letsagoservice.domain.models.User
+import me.kolotilov.letsagoservice.utils.toDateTime
+import java.util.*
 import javax.persistence.*
 
 @Table(name = "user_entity")
@@ -14,13 +16,13 @@ data class UserEntity(
     @Column(name = "confirmation_url")
     val confirmationUrl: String,
     @Column(name = "name")
-    val name: String,
-    @Column(name = "age")
-    val age: Int = -1,
+    val name: String?,
+    @Column(name = "birth_date")
+    val birthDate: Date?,
     @Column(name = "height")
-    val height: Int = -1,
+    val height: Int?,
     @Column(name = "weight")
-    val weight: Int = -1,
+    val weight: Int?,
     @JoinColumn(name = "user_id")
     @OneToMany(cascade = [CascadeType.ALL])
     val illnesses: List<IllnessEntity>,
@@ -42,7 +44,7 @@ fun UserEntity.toUser(): User = User(
     password = password,
     confirmationUrl = confirmationUrl,
     name = name,
-    age = age,
+    birthDate = birthDate?.toDateTime(),
     height = height,
     weight = weight,
     illnesses = illnesses.map { it.toIllness() },
@@ -57,7 +59,7 @@ fun User.toUserEntity(): UserEntity = UserEntity(
     password = password,
     confirmationUrl = confirmationUrl,
     name = name,
-    age = age,
+    birthDate = birthDate?.toDate(),
     height = height,
     weight = weight,
     illnesses = illnesses.map { it.toIllnessEntity() },

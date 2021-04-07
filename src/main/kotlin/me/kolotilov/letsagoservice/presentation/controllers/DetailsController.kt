@@ -11,6 +11,7 @@ import me.kolotilov.letsagoservice.presentation.input.EditDetailsDto
 import me.kolotilov.letsagoservice.presentation.input.toFilter
 import me.kolotilov.letsagoservice.presentation.output.UserDetailsDto
 import me.kolotilov.letsagoservice.presentation.output.toUserDetailsDto
+import me.kolotilov.letsagoservice.utils.toDateTime
 import org.springframework.web.bind.annotation.*
 
 @Api("Личные данные юзера.")
@@ -37,7 +38,7 @@ class DetailsController(
     ): UserDetailsDto {
         return userService.edit(
             name = details.name,
-            age = details.age,
+            birthDate = details.birthDate?.toDateTime(),
             height = details.height,
             weight = details.weight,
             illnesses = details.illnesses?.let { illnessService.getOrCreateAll(details.illnesses) },
