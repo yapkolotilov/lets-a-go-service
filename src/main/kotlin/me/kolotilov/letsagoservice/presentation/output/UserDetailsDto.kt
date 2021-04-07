@@ -43,7 +43,7 @@ data class UserDetailsDto(
 
 fun User.toUserDetailsDto() = UserDetailsDto(
     username = username,
-    name = name.takeIf { it.isNotEmpty() },
+    name = name.takeIf { !it.isNullOrEmpty() },
     age = birthDate?.let { Years.yearsBetween(it, DateTime.now()) }?.years,
     birthDate = birthDate?.toDate(),
     height = height,
