@@ -9,8 +9,12 @@ import javax.persistence.*
 
 @Entity(name = "filter")
 data class FilterEntity(
+    @Column(name = "min_length")
+    val minLength: Double?,
     @Column(name = "max_length")
     val maxLength: Double?,
+    @Column(name = "min_duration")
+    val minDuration: Date?,
     @Column(name = "max_duration")
     val maxDuration: Date?,
     @ElementCollection
@@ -28,17 +32,24 @@ data class FilterEntity(
 )
 
 fun Filter.toFilterEntity() = FilterEntity(
-    maxLength = maxLength,
-    maxDuration = maxDuration?.toDate(),
+    minLength = length?.start,
+    maxLength = length?.endInclusive,
+    minDuration = duration?.start?.toDate(),
+    maxDuration = duration?.endInclusive?.toDate(),
     typesAllowed = typesAllowed,
     groundsAllowed = groundsAllowed,
     id = id
 )
 
-fun FilterEntity.toFilter() = Filter(
-    maxLength = maxLength,
-    maxDuration = maxDuration?.toDuration(),
-    typesAllowed = typesAllowed,
-    groundsAllowed = groundsAllowed,
-    id = id
-)
+fun FilterEntity.toFilter(): Filter {
+    val length = if (minLength != null && maxLength != null) minLength..maxLength else null
+    val duration =
+        if (minDuration != null && maxDuration != null) minDuration.toDuration()..maxDuration.toDuration() else null
+    return Filter(
+        length = length,
+        duration = duration,
+        typesAllowed = typesAllowed,
+        groundsAllowed = groundsAllowed,
+        id = id
+    )
+}

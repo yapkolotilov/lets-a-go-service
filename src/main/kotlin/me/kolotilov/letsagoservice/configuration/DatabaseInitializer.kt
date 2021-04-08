@@ -37,8 +37,8 @@ class DatabaseInitializer(
                     Symptom("Отёчность", true, null)
                 ),
                 Filter(
-                    maxLength = 10.0,
-                    maxDuration = null,
+                    length = 1.0..10.0,
+                    duration = null,
                     typesAllowed = listOf(Route.Type.WALKING),
                     groundsAllowed = Route.Ground.values().toList(),
                     id = 1
@@ -49,8 +49,8 @@ class DatabaseInitializer(
                     Symptom("Боли в ногах", true, null)
                 ),
                 Filter(
-                    maxLength = 0.0,
-                    maxDuration = Duration.standardHours(1),
+                    length = 0.0..5.0,
+                    duration = Duration.standardHours(1)..Duration.standardHours(5),
                     typesAllowed = listOf(Route.Type.WALKING),
                     groundsAllowed = listOf(Route.Ground.ASPHALT),
                     id = 2

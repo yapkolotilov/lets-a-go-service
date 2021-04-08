@@ -16,7 +16,6 @@ data class EditDetailsDto(
 
     @ApiModelProperty("Возраст.")
     @JsonProperty("birthDate")
-    @Range(min = 1, max = 122)
     val birthDate: Date?,
 
     @ApiModelProperty("Рост (см).")
