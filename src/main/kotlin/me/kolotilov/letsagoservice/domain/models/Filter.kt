@@ -15,6 +15,7 @@ data class Filter(
     val duration: ClosedRange<Duration>?,
     val typesAllowed: List<Route.Type>?,
     val groundsAllowed: List<Route.Ground>?,
+    val enabled: Boolean,
     val id: Int
 ) {
 
@@ -35,6 +36,7 @@ data class Filter(
                 duration = if (minDuration != null && maxDuration != null) minDuration..maxDuration else null,
                 typesAllowed = filters.mapNotNull { it.typesAllowed }.flatten().nullIfEmpty()?.distinct(),
                 groundsAllowed = filters.mapNotNull { it.groundsAllowed }.flatten().nullIfEmpty()?.distinct(),
+                enabled = true,
                 id = 0
             )
         }
@@ -50,6 +52,8 @@ data class Filter(
      * @param route Маршрут.
      */
     fun matches(route: Route): Boolean {
+        if (!enabled)
+            return true
         if (length != null && route.length() !in length)
             return false
         if (duration != null && route.duration() !in duration)

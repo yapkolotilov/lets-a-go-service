@@ -31,7 +31,10 @@ data class FilterDto(
     val typesAllowed: List<Route.Type>?,
     @ApiModelProperty("Разрешённые покрытия маршрутов.")
     @JsonProperty("grounds_allowed")
-    val groundsAllowed: List<Route.Ground>?
+    val groundsAllowed: List<Route.Ground>?,
+    @ApiModelProperty("Включён ли фильтр.")
+    @JsonProperty("enabled")
+    val enabled: Boolean
 )
 
 fun FilterDto.toFilter() = Filter(
@@ -39,6 +42,7 @@ fun FilterDto.toFilter() = Filter(
     duration = if (minDuration != null && maxDuration != null) minDuration.toDuration()..maxDuration.toDuration() else null,
     typesAllowed = typesAllowed,
     groundsAllowed = groundsAllowed,
+    enabled = true,
     id = 0
 )
 
@@ -48,5 +52,6 @@ fun Filter.toFilterDto() = FilterDto(
     minDuration = duration?.start?.toDate(),
     maxDuration = duration?.endInclusive?.toDate(),
     typesAllowed = typesAllowed,
-    groundsAllowed = groundsAllowed
+    groundsAllowed = groundsAllowed,
+    enabled = enabled
 )
