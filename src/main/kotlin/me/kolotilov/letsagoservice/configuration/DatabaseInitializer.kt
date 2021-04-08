@@ -41,6 +41,7 @@ class DatabaseInitializer(
                     duration = null,
                     typesAllowed = listOf(Route.Type.WALKING),
                     groundsAllowed = Route.Ground.values().toList(),
+                    enabled = true,
                     id = 1
                 )
             ),
@@ -53,6 +54,7 @@ class DatabaseInitializer(
                     duration = Duration.standardHours(1)..Duration.standardHours(5),
                     typesAllowed = listOf(Route.Type.WALKING),
                     groundsAllowed = listOf(Route.Ground.ASPHALT),
+                    enabled = true,
                     id = 2
                 )
             ),

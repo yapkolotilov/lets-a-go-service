@@ -25,6 +25,8 @@ data class FilterEntity(
     @CollectionTable
     @Enumerated(EnumType.STRING)
     val groundsAllowed: List<Route.Ground>?,
+    @Column(name = "enabled")
+    val enabled: Boolean,
     @Id
     @GeneratedValue
     @Column(name = "id")
@@ -38,6 +40,7 @@ fun Filter.toFilterEntity() = FilterEntity(
     maxDuration = duration?.endInclusive?.toDate(),
     typesAllowed = typesAllowed,
     groundsAllowed = groundsAllowed,
+    enabled = enabled,
     id = id
 )
 
@@ -50,6 +53,7 @@ fun FilterEntity.toFilter(): Filter {
         duration = duration,
         typesAllowed = typesAllowed,
         groundsAllowed = groundsAllowed,
+        enabled = enabled,
         id = id
     )
 }
