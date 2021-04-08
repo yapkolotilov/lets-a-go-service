@@ -42,7 +42,7 @@ fun FilterDto.toFilter() = Filter(
     duration = if (minDuration != null && maxDuration != null) minDuration.toDuration()..maxDuration.toDuration() else null,
     typesAllowed = typesAllowed,
     groundsAllowed = groundsAllowed,
-    enabled = true,
+    enabled = enabled,
     id = 0
 )
 
