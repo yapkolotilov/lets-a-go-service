@@ -51,7 +51,7 @@ fun Filter.toFilterDto() = FilterDto(
     maxLength = length?.endInclusive,
     minDuration = duration?.start?.toDate(),
     maxDuration = duration?.endInclusive?.toDate(),
-    typesAllowed = typesAllowed,
-    groundsAllowed = groundsAllowed,
+    typesAllowed = typesAllowed?.takeIf { it.isNotEmpty() },
+    groundsAllowed = groundsAllowed?.takeIf { it.isNotEmpty() },
     enabled = enabled
 )
