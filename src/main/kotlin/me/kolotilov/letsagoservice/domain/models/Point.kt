@@ -15,6 +15,7 @@ import kotlin.math.*
 data class Point(
     val latitude: Double,
     val longitude: Double,
+    val altitude: Double,
     val timestamp: DateTime,
     val id: Int
 ) {
@@ -33,6 +34,14 @@ fun List<Point>.distance(): Double {
 
 fun List<Point>.duration(): Duration {
     return Duration(firstOrNull()?.timestamp ?: DateTime.now(), lastOrNull()?.timestamp ?: DateTime.now())
+}
+
+fun List<Point>.speed(): Double {
+    return (distance() / 1000) / (duration().millis / (60 * 60 * 1000))
+}
+
+fun List<Point>.altitudeDelta(): Double {
+    return maxOf { it.altitude } - minOf { it.altitude }
 }
 
 // https://stackoverflow.com/a/16794680

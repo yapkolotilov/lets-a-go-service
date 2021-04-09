@@ -6,10 +6,7 @@ import io.swagger.annotations.ApiParam
 import me.kolotilov.letsagoservice.domain.services.MapService
 import me.kolotilov.letsagoservice.domain.services.UserService
 import me.kolotilov.letsagoservice.presentation.input.*
-import me.kolotilov.letsagoservice.presentation.output.EntryDto
-import me.kolotilov.letsagoservice.presentation.output.RouteDetailsDto
-import me.kolotilov.letsagoservice.presentation.output.toEntryDto
-import me.kolotilov.letsagoservice.presentation.output.toRouteDetailsDto
+import me.kolotilov.letsagoservice.presentation.output.*
 import org.springframework.web.bind.annotation.*
 
 @Api("Карта.")
@@ -52,6 +49,16 @@ class MapController(
     ): List<RouteDetailsDto> {
         return mapService.findRoutes(name, filter?.toFilter())
             .map { it.toRouteDetailsDto() }
+    }
+
+    @ApiOperation("Превью маршрута.")
+    @PostMapping("/routes/preview")
+    fun routePreview(
+        @ApiParam("Точки маршрута.")
+        @RequestBody
+        points: CreateRoutePreviewDto
+    ): RoutePreviewDto {
+        return mapService.getRoutePreview(points.points.map { it.toPoint() }).toRoutePreviewDto()
     }
 
     @ApiOperation("Создание маршрута.")

@@ -1,14 +1,16 @@
 package me.kolotilov.letsagoservice.domain.services
 
-import me.kolotilov.letsagoservice.domain.models.Entry
-import me.kolotilov.letsagoservice.domain.models.Filter
-import me.kolotilov.letsagoservice.domain.models.Route
+import me.kolotilov.letsagoservice.configuration.ErrorCode
+import me.kolotilov.letsagoservice.configuration.ServiceException
+import me.kolotilov.letsagoservice.domain.models.*
 import me.kolotilov.letsagoservice.persistance.entities.toRoute
 import me.kolotilov.letsagoservice.persistance.entities.toRouteEntity
 import me.kolotilov.letsagoservice.persistance.repositories.EntryRepository
 import me.kolotilov.letsagoservice.persistance.repositories.RouteRepository
 import me.kolotilov.letsagoservice.utils.toNullable
 import org.springframework.stereotype.Service
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 /**
  * Сервис для работы с картой.
@@ -77,6 +79,8 @@ interface MapService {
     fun getAllEntries(): List<Entry>
 
     fun clearRoutes()
+
+    fun getRoutePreview(points: List<Point>): RoutePreview
 }
 
 @Service
@@ -141,5 +145,48 @@ private class MapServiceImpl(
 
     override fun clearRoutes() {
         routeRepository.deleteAll()
+    }
+
+    override fun getRoutePreview(points: List<Point>): RoutePreview {
+        val distance = points.distance()
+        val speed = points.speed()
+        val difficulty = when (distance) {
+            in 0.0..0.1 -> throw ServiceException(ErrorCode.INVALID_PASSWORD)
+            in 0.1..2.0 -> 1
+            in 2.0..4.0 -> 2
+            in 4.0..6.0 -> 3
+            in 6.0..8.0 -> 4
+            else -> 5
+        }
+        val type = when (speed) {
+            in 0.0..6.0 -> Route.Type.WALKING
+            in 6.0..25.0 -> Route.Type.RUNNING
+            else -> Route.Type.CYCLING
+        }
+        return RoutePreview(
+            distance = distance,
+            duration = points.duration(),
+            speed = speed,
+            altitudeDelta = points.altitudeDelta(),
+            type = type,
+            difficulty = difficulty,
+            kiloCaloriesBurnt = kiloCaloriesBurnt(userService.getCurrentUser(), points, type)
+        )
+    }
+
+    private fun kiloCaloriesBurnt(user: User, points: List<Point>, type: Route.Type): Int? {
+        if (user.height == null || user.weight == null) return null
+        return when (type) {
+            Route.Type.WALKING -> {
+                (0.035 * user.weight +
+                        (points.speed().pow(2) / user.height) * 0.029 * user.weight) * points.duration().standardMinutes
+            }
+            Route.Type.RUNNING -> {
+                user.weight * points.distance() / 1000
+            }
+            Route.Type.CYCLING -> {
+                0.014 * user.weight * points.duration().standardMinutes * (0.12 * 158 - 7)
+            }
+        }.roundToInt()
     }
 }

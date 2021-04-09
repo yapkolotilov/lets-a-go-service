@@ -14,6 +14,8 @@ data class PointEntity(
         val latitude: Double,
         @Column(name = "longitude")
         val longitude: Double,
+        @Column(name = "altitude")
+        val altitude: Double,
         @Column(name = "timestamp")
         val timestamp: Date,
         @Id
@@ -25,6 +27,7 @@ data class PointEntity(
 fun Point.toPointEntity() = PointEntity(
         latitude = latitude,
         longitude = longitude,
+        altitude = altitude,
         timestamp = timestamp.toDate(),
         id = id
 )
@@ -32,6 +35,7 @@ fun Point.toPointEntity() = PointEntity(
 fun PointEntity.toPoint() = Point(
         latitude = latitude,
         longitude = longitude,
+        altitude = altitude,
         timestamp = timestamp.toDateTime(),
         id = id
 )
