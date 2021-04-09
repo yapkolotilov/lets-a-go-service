@@ -89,8 +89,10 @@ private class MapServiceImpl(
 ) : MapService {
 
     override fun getAllRoutes(filter: Boolean): List<Route> {
+        val user = userService.getCurrentUser()
         return routeRepository.findAll()
             .map { it.toRoute() }
+            .filter { it.isPublic || user.routes.contains(it) }
             .filter {
                 if (filter)
                     userService.getCurrentUser().filter.matches(it)

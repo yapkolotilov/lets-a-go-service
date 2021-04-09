@@ -23,9 +23,9 @@ class MapController(
     fun getAllRoutes(
         @ApiParam("Фильтр.")
         @RequestParam("filter") filter: Boolean
-    ): List<RouteDetailsDto> {
+    ): List<RoutePointDto> {
         return mapService.getAllRoutes(filter)
-            .map { it.toRouteDetailsDto() }
+            .map { it.toRoutePointDto() }
     }
 
     @ApiOperation("Возвращает маршрут по id.")

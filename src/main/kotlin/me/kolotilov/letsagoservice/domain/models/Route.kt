@@ -15,13 +15,14 @@ import kotlin.math.*
  * @param id ID маршрута.
  */
 data class Route(
-        val name: String?,
-        val difficulty: Int?,
-        val type: Type?,
-        val ground: Ground?,
-        val points: List<Point>,
-        val entries: List<Entry>,
-        val id: Int,
+    val name: String?,
+    val difficulty: Int?,
+    val type: Type?,
+    val ground: Ground?,
+    val points: List<Point>,
+    val entries: List<Entry>,
+    val isPublic: Boolean,
+    val id: Int,
 ) {
 
     /**

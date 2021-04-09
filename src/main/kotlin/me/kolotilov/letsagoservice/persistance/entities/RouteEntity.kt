@@ -19,6 +19,8 @@ data class RouteEntity(
         @OneToMany(cascade = [CascadeType.ALL])
         @JoinColumn(name = "route_id")
         val entries: List<EntryEntity>,
+        @Column(name = "public")
+        val public: Boolean,
         @Id
         @GeneratedValue
         @Column(name = "id")
@@ -32,6 +34,7 @@ fun Route.toRouteEntity(): RouteEntity = RouteEntity(
         ground = ground,
         points = points.map { it.toPointEntity() },
         entries = entries.map { it.toEntryEntity() },
+        public = isPublic,
         id = id
 )
 
@@ -42,5 +45,6 @@ fun RouteEntity.toRoute(): Route = Route(
         ground = ground,
         points = points.map { it.toPoint() },
         entries = entries.map { it.toEntry() },
+        isPublic = public,
         id = id
 )
