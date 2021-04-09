@@ -168,23 +168,24 @@ private class MapServiceImpl(
             altitudeDelta = points.altitudeDelta(),
             type = type,
             difficulty = difficulty,
-            kiloCaloriesBurnt = kiloCaloriesBurnt(userService.getCurrentUser(), points, type)
+            kiloCaloriesBurnt = kiloCaloriesBurnt(userService.getCurrentUser(), type, points)
         )
     }
+}
 
-    private fun kiloCaloriesBurnt(user: User, points: List<Point>, type: Route.Type): Int? {
-        if (user.height == null || user.weight == null) return null
-        return when (type) {
-            Route.Type.WALKING -> {
-                (0.035 * user.weight +
-                        (points.speed().pow(2) / user.height) * 0.029 * user.weight) * points.duration().standardMinutes
-            }
-            Route.Type.RUNNING -> {
-                user.weight * points.distance() / 1000
-            }
-            Route.Type.CYCLING -> {
-                0.014 * user.weight * points.duration().standardMinutes * (0.12 * 158 - 7)
-            }
-        }.roundToInt()
-    }
+fun kiloCaloriesBurnt(user: User, type: Route.Type?, points: List<Point>): Int? {
+    if (user.height == null || user.weight == null) return null
+    return when (type) {
+        Route.Type.WALKING -> {
+            (0.035 * user.weight +
+                    (points.speed().pow(2) / user.height) * 0.029 * user.weight) * points.duration().standardMinutes
+        }
+        Route.Type.RUNNING -> {
+            user.weight * points.distance() / 1000
+        }
+        Route.Type.CYCLING -> {
+            0.014 * user.weight * points.duration().standardMinutes * (0.12 * 158 - 7)
+        }
+        else -> return null
+    }.roundToInt()
 }

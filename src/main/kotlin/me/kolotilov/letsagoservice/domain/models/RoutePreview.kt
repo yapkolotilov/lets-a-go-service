@@ -20,5 +20,5 @@ data class RoutePreview(
     val kiloCaloriesBurnt: Int?,
     val altitudeDelta: Double,
     val type: Route.Type,
-    val difficulty: Int?
+    val difficulty: Int
 )

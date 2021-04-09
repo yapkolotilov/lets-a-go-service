@@ -30,7 +30,7 @@ data class RoutePreviewDto(
     val type: Route.Type,
     @ApiModelProperty("Сложность")
     @JsonProperty("difficulty")
-    val difficulty: Int?
+    val difficulty: Int
 )
 
 fun RoutePreview.toRoutePreviewDto() = RoutePreviewDto(

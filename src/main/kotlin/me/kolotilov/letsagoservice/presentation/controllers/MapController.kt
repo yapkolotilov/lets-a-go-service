@@ -3,6 +3,7 @@ package me.kolotilov.letsagoservice.presentation.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
+import me.kolotilov.letsagoservice.domain.models.Route
 import me.kolotilov.letsagoservice.domain.services.MapService
 import me.kolotilov.letsagoservice.domain.services.UserService
 import me.kolotilov.letsagoservice.presentation.input.*
@@ -124,4 +125,6 @@ class MapController(
     fun getAllEntries(): List<EntryDto> {
         return mapService.getAllEntries().map { it.toEntryDto() }
     }
+
+    private fun Route.toRouteDetailsDto() = toRouteDetailsDto(userService.getCurrentUser())
 }
