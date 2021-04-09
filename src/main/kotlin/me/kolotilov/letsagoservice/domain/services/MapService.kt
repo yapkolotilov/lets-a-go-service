@@ -148,7 +148,7 @@ private class MapServiceImpl(
     override fun getRoutePreview(points: List<Point>): RoutePreview {
         val distance = points.distance()
         val speed = points.speed()
-        val difficulty = when (distance) {
+        val difficulty = when (distance / 1000) {
             in 0.0..0.1 -> 1
             in 0.1..2.0 -> 1
             in 2.0..4.0 -> 2
