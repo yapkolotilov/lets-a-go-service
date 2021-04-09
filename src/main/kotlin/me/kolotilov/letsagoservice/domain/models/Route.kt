@@ -16,7 +16,7 @@ import kotlin.math.*
  */
 data class Route(
     val name: String?,
-    val difficulty: Int?,
+    val difficulty: Int,
     val type: Type?,
     val ground: Ground?,
     val points: List<Point>,

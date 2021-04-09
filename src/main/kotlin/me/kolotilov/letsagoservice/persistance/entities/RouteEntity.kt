@@ -8,7 +8,7 @@ data class RouteEntity(
         @Column(name = "name")
         val name: String?,
         @Column(name = "difficulty")
-        val difficulty: Int?,
+        val difficulty: Int,
         @Enumerated(EnumType.STRING)
         val type: Route.Type?,
         @Enumerated(EnumType.STRING)

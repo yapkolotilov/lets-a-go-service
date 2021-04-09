@@ -14,13 +14,16 @@ data class CreateRouteDto(
     val name: String?,
     @ApiModelProperty("Сложность.")
     @JsonProperty("difficulty")
-    val difficulty: Int?,
+    val difficulty: Int,
     @ApiModelProperty("Тип.")
     @JsonProperty("type")
     val type: Route.Type?,
     @ApiModelProperty("Тип покрытия.")
     @JsonProperty("ground")
     val ground: Route.Ground?,
+    @ApiModelProperty("Публиковать ли маршрут.")
+    @JsonProperty("public")
+    val isPublic: Boolean,
     @ApiModelProperty("Точки.")
     @JsonProperty("points")
     @NotEmpty
@@ -36,8 +39,9 @@ fun CreateRouteDto.toRoute() = Route(
     entries = listOf(
         Entry(
             points = points.map { it.toPoint() },
-            id = 0
+            id = -1
         )
     ),
+    isPublic = isPublic,
     id = 0
 )
