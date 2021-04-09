@@ -27,7 +27,7 @@ data class RoutePreviewDto(
     val altitudeDelta: Double,
     @ApiModelProperty("Тип.")
     @JsonProperty("type")
-    val type: Route.Type?,
+    val type: Route.Type,
     @ApiModelProperty("Сложность")
     @JsonProperty("difficulty")
     val difficulty: Int?

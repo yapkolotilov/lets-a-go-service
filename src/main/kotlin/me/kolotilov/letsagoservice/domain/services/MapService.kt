@@ -151,7 +151,7 @@ private class MapServiceImpl(
         val distance = points.distance()
         val speed = points.speed()
         val difficulty = when (distance) {
-            in 0.0..0.1 -> throw ServiceException(ErrorCode.INVALID_PASSWORD)
+            in 0.0..0.1 -> throw ServiceException(ErrorCode.ROUTE_TOO_SHORT)
             in 0.1..2.0 -> 1
             in 2.0..4.0 -> 2
             in 4.0..6.0 -> 3
