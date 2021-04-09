@@ -1,7 +1,5 @@
 package me.kolotilov.letsagoservice.domain.services
 
-import me.kolotilov.letsagoservice.configuration.ErrorCode
-import me.kolotilov.letsagoservice.configuration.ServiceException
 import me.kolotilov.letsagoservice.domain.models.*
 import me.kolotilov.letsagoservice.persistance.entities.toRoute
 import me.kolotilov.letsagoservice.persistance.entities.toRouteEntity
@@ -151,7 +149,7 @@ private class MapServiceImpl(
         val distance = points.distance()
         val speed = points.speed()
         val difficulty = when (distance) {
-            in 0.0..0.1 -> throw ServiceException(ErrorCode.ROUTE_TOO_SHORT)
+            in 0.0..0.1 -> 1
             in 0.1..2.0 -> 1
             in 2.0..4.0 -> 2
             in 4.0..6.0 -> 3
