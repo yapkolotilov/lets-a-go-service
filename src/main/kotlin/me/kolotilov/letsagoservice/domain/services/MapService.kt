@@ -191,7 +191,8 @@ private class MapServiceImpl(
             speed = points.speed(),
             kiloCaloriesBurnt = kiloCaloriesBurnt(userService.getCurrentUser(), route.type, points),
             altitudeDelta = points.altitudeDelta(),
-            passed = (points.last() distance route.points.last()) < 100
+            passed = (points.last() distance route.points.last()) < 100,
+            routeId = routeId
         )
     }
 }

@@ -8,5 +8,6 @@ data class EntryPreview(
     val speed: Double,
     val kiloCaloriesBurnt: Int?,
     val altitudeDelta: Double,
-    val passed: Boolean
+    val passed: Boolean,
+    val routeId: Int
 )

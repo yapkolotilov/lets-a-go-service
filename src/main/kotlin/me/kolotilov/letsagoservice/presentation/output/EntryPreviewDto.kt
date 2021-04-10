@@ -26,7 +26,10 @@ data class EntryPreviewDto(
     val altitudeDelta: Double,
     @ApiModelProperty("Пройден ли маршрут.")
     @JsonProperty("passed")
-    val passed: Boolean
+    val passed: Boolean,
+    @ApiModelProperty("ID маршрута.")
+    @JsonProperty("route_id")
+    val routeId: Int
 )
 
 fun EntryPreview.toEntryPreviewDto() = EntryPreviewDto(
@@ -35,5 +38,6 @@ fun EntryPreview.toEntryPreviewDto() = EntryPreviewDto(
     speed = speed,
     kiloCaloriesBurnt = kiloCaloriesBurnt,
     altitudeDelta = altitudeDelta,
-    passed = passed
+    passed = passed,
+    routeId = routeId
 )
