@@ -58,7 +58,7 @@ fun Route.toRouteDetailsDto(user: User) = RouteDetailsDto(
     difficulty = difficulty,
     type = type,
     ground = ground,
-    entries = entries.map { it.toRouteEntryDto(this) },
+    entries = entries.filter { user.entries.contains(it) }.map { it.toRouteEntryDto(this) },
     mine = user.routes.contains(this),
     id = id
 )

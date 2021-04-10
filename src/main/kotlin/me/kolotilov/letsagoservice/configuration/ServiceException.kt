@@ -53,5 +53,5 @@ enum class ErrorCode {
     /**
      * Слишком высокая скорость.
      */
-    SPEED_TO_FAST
+    SPEED_TOO_FAST
 }

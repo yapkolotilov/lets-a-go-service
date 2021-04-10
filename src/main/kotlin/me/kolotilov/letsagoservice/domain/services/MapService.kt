@@ -177,7 +177,7 @@ private class MapServiceImpl(
             in 0.0..6.0 -> Route.Type.WALKING
             in 6.0..25.0 -> Route.Type.RUNNING
             in 25.00..100.0 -> Route.Type.CYCLING
-            else -> throw ServiceException(ErrorCode.SPEED_TO_FAST)
+            else -> throw ServiceException(ErrorCode.SPEED_TOO_FAST)
         }
         return RoutePreview(
             distance = distance,
