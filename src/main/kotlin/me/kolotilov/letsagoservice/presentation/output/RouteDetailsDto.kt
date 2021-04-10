@@ -43,22 +43,33 @@ class RouteDetailsDto(
     @ApiModelProperty("Свой ли маршрут.")
     @JsonProperty("mine")
     val mine: Boolean,
+    @ApiModelProperty("Всего пройдено.")
+    @JsonProperty("total_distance")
+    val totalDistance: Double,
+    @ApiModelProperty("Всего ккал сожжено.")
+    @JsonProperty("total_calories_burnt")
+    val totalCaloriesBurnt: Int?,
     @ApiModelProperty("ID")
     @JsonProperty("id")
     val id: Int,
 )
 
-fun Route.toRouteDetailsDto(user: User) = RouteDetailsDto(
-    name = name,
-    distance = points.distance(),
-    duration = points.duration().toDate(),
-    altitudeDelta = points.altitudeDelta(),
-    speed = points.speed(),
-    kilocaloriesBurnt = kiloCaloriesBurnt(user, type, points),
-    difficulty = difficulty,
-    type = type,
-    ground = ground,
-    entries = entries.filter { user.entries.contains(it) }.map { it.toRouteEntryDto(this) },
-    mine = user.routes.contains(this),
-    id = id
-)
+fun Route.toRouteDetailsDto(user: User): RouteDetailsDto {
+    val entries = entries.filter { user.entries.contains(it) }
+    return RouteDetailsDto(
+        name = name,
+        distance = points.distance(),
+        duration = points.duration().toDate(),
+        altitudeDelta = points.altitudeDelta(),
+        speed = points.speed(),
+        kilocaloriesBurnt = kiloCaloriesBurnt(user, type, points),
+        difficulty = difficulty,
+        type = type,
+        ground = ground,
+        entries = entries.map { it.toRouteEntryDto(this) },
+        mine = user.routes.contains(this),
+        totalDistance = entries.sumByDouble { it.distance() },
+        totalCaloriesBurnt = entries.sumBy { kiloCaloriesBurnt(user, type, it.points) ?: 0 }.takeIf { it > 0 },
+        id = id
+    )
+}
