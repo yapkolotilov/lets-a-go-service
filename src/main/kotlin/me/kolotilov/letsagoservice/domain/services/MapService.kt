@@ -142,7 +142,7 @@ private class MapServiceImpl(
         )
         val user = userService.getCurrentUser()
         val newUser = user.copy(entries = user.entries + entry)
-        userService.update(user)
+        userService.update(newUser)
         return routeRepository.save(route.toRouteEntity()).toRoute()
     }
 
