@@ -1,7 +1,7 @@
 package me.kolotilov.letsagoservice.presentation.controllers
 
 import me.kolotilov.letsagoservice.domain.services.MapService
-import me.kolotilov.letsagoservice.persistance.repositories.RouteRepository
+import me.kolotilov.letsagoservice.domain.services.UserService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -11,7 +11,8 @@ import java.util.*
 @RestController
 @RequestMapping("/test")
 class TestController(
-    private val mapService: MapService
+    private val mapService: MapService,
+    private val userService: UserService
 ) {
 
     @GetMapping("/time")
@@ -22,5 +23,10 @@ class TestController(
     @PostMapping("/routes/clear")
     fun clearRoutes() {
         mapService.clearRoutes()
+    }
+
+    @GetMapping("/entries")
+    fun getCurrentEntries(): Int {
+        return userService.getCurrentUser().entries.size
     }
 }
