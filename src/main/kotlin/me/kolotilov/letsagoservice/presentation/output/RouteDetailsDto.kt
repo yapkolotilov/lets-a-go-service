@@ -39,7 +39,7 @@ class RouteDetailsDto(
     val ground: Route.Ground?,
     @ApiModelProperty("Походы.")
     @JsonProperty("entries")
-    val entries: List<EntryDto>,
+    val entries: List<RouteEntryDto>,
     @ApiModelProperty("Свой ли маршрут.")
     @JsonProperty("mine")
     val mine: Boolean,
@@ -58,7 +58,7 @@ fun Route.toRouteDetailsDto(user: User) = RouteDetailsDto(
     difficulty = difficulty,
     type = type,
     ground = ground,
-    entries = entries.map { it.toEntryDto() },
+    entries = entries.map { it.toRouteEntryDto(this) },
     mine = user.routes.contains(this),
     id = id
 )
