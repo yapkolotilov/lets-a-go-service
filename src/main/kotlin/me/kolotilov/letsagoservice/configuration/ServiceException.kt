@@ -48,7 +48,7 @@ enum class ErrorCode {
     /**
      * Слишком короткий маршрут.
      */
-    ROUTE_TOO_SHORT,
+    ENTRY_TOO_SHORT,
 
     /**
      * Слишком высокая скорость.

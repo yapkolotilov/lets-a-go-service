@@ -1,5 +1,7 @@
 package me.kolotilov.letsagoservice.domain.services
 
+import me.kolotilov.letsagoservice.configuration.ErrorCode
+import me.kolotilov.letsagoservice.configuration.ServiceException
 import me.kolotilov.letsagoservice.domain.models.*
 import me.kolotilov.letsagoservice.persistance.entities.toRoute
 import me.kolotilov.letsagoservice.persistance.entities.toRouteEntity
@@ -79,6 +81,8 @@ interface MapService {
     fun clearRoutes()
 
     fun getRoutePreview(points: List<Point>): RoutePreview
+
+    fun entryPreview(routeId: Int, points: List<Point>): EntryPreview
 }
 
 @Service
@@ -149,6 +153,8 @@ private class MapServiceImpl(
 
     override fun getRoutePreview(points: List<Point>): RoutePreview {
         val distance = points.distance()
+        if (points.isEmpty() || distance < 100)
+            throw ServiceException(ErrorCode.ENTRY_TOO_SHORT)
         val speed = points.speed()
         val difficulty = when (distance / 1000) {
             in 0.0..0.1 -> 1
@@ -161,7 +167,8 @@ private class MapServiceImpl(
         val type = when (speed) {
             in 0.0..6.0 -> Route.Type.WALKING
             in 6.0..25.0 -> Route.Type.RUNNING
-            else -> Route.Type.CYCLING
+            in 25.00..100.0 -> Route.Type.CYCLING
+            else -> throw ServiceException(ErrorCode.SPEED_TO_FAST)
         }
         return RoutePreview(
             distance = distance,
@@ -171,6 +178,20 @@ private class MapServiceImpl(
             type = type,
             difficulty = difficulty,
             kiloCaloriesBurnt = kiloCaloriesBurnt(userService.getCurrentUser(), type, points)
+        )
+    }
+
+    override fun entryPreview(routeId: Int, points: List<Point>): EntryPreview {
+        val route = getRoute(routeId)
+        if (points.isEmpty())
+            throw ServiceException(ErrorCode.ENTRY_TOO_SHORT)
+        return EntryPreview(
+            distance = points.distance(),
+            duration = points.duration(),
+            speed = points.speed(),
+            kiloCaloriesBurnt = kiloCaloriesBurnt(userService.getCurrentUser(), route.type, points),
+            altitudeDelta = points.altitudeDelta(),
+            passed = (points.last() distance route.points.last()) < 100
         )
     }
 }

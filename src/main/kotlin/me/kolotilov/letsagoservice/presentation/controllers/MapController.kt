@@ -96,6 +96,14 @@ class MapController(
         mapService.deleteRoute(id)
     }
 
+    @ApiOperation("Превью похода.")
+    @PostMapping("/entries/preview")
+    fun entryPreview(
+        @RequestBody entry: CreateEntryPreviewDto
+    ): EntryPreviewDto {
+        return mapService.entryPreview(entry.routeId, entry.points.map { it.toPoint() }).toEntryPreviewDto()
+    }
+
     @ApiOperation("Создание прохода.")
     @PostMapping("/routes/{id}/entries")
     fun createEntry(
