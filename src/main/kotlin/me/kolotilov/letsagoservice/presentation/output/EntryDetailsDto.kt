@@ -3,9 +3,7 @@ package me.kolotilov.letsagoservice.presentation.output
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import me.kolotilov.letsagoservice.domain.models.Entry
-import me.kolotilov.letsagoservice.domain.models.Route
-import me.kolotilov.letsagoservice.domain.models.User
+import me.kolotilov.letsagoservice.domain.models.*
 import me.kolotilov.letsagoservice.domain.services.kiloCaloriesBurnt
 import me.kolotilov.letsagoservice.utils.toDate
 import java.util.*
@@ -48,5 +46,7 @@ fun Entry.toEntryDetailsDto(route: Route, user: User) = EntryDetailsDto(
     distance = distance(),
     kiloCaloriesBurnt = kiloCaloriesBurnt(user, route.type, points),
     routeId = route.id,
+    altitudeDelta = points.altitudeDelta(),
+    speed = points.speed(),
     id = id
 )
