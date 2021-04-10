@@ -4,6 +4,7 @@ import me.kolotilov.letsagoservice.configuration.ErrorCode
 import me.kolotilov.letsagoservice.configuration.ServiceException
 import me.kolotilov.letsagoservice.domain.models.*
 import me.kolotilov.letsagoservice.persistance.entities.toEntry
+import me.kolotilov.letsagoservice.persistance.entities.toEntryEntity
 import me.kolotilov.letsagoservice.persistance.entities.toRoute
 import me.kolotilov.letsagoservice.persistance.entities.toRouteEntity
 import me.kolotilov.letsagoservice.persistance.repositories.EntryRepository
@@ -121,10 +122,11 @@ private class MapServiceImpl(
     }
 
     override fun createRoute(route: Route): Route {
+        val newRoute = routeRepository.save(route.toRouteEntity()).toRoute()
         val user = userService.getCurrentUser()
-        val newUser = user.copy(routes = user.routes + route)
+        val newUser = user.copy(routes = user.routes + newRoute, entries = user.entries + newRoute.entries.first())
         userService.update(newUser)
-        return routeRepository.save(route.toRouteEntity()).toRoute()
+        return newRoute
     }
 
     override fun editRoute(route: Route): Route {
@@ -137,11 +139,12 @@ private class MapServiceImpl(
 
     override fun createEntry(routeId: Int, entry: Entry): Route {
         var route = routeRepository.findById(routeId).toNullable()?.toRoute()!!
+        val newEntry = entryRepository.save(entry.toEntryEntity()).toEntry()
         route = route.copy(
-            entries = route.entries + entry
+            entries = route.entries + newEntry
         )
         val user = userService.getCurrentUser()
-        val newUser = user.copy(entries = user.entries + entry)
+        val newUser = user.copy(entries = user.entries + newEntry)
         userService.update(newUser)
         return routeRepository.save(route.toRouteEntity()).toRoute()
     }
