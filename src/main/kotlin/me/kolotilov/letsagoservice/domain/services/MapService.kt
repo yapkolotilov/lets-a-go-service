@@ -121,6 +121,9 @@ private class MapServiceImpl(
     }
 
     override fun createRoute(route: Route): Route {
+        val user = userService.getCurrentUser()
+        val newUser = user.copy(routes = user.routes + route)
+        userService.update(newUser)
         return routeRepository.save(route.toRouteEntity()).toRoute()
     }
 
@@ -137,6 +140,9 @@ private class MapServiceImpl(
         route = route.copy(
             entries = route.entries + entry
         )
+        val user = userService.getCurrentUser()
+        val newUser = user.copy(entries = user.entries + entry)
+        userService.update(user)
         return routeRepository.save(route.toRouteEntity()).toRoute()
     }
 

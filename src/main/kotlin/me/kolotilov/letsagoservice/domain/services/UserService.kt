@@ -57,6 +57,8 @@ interface UserService {
      * @param password Новый пароль.
      */
     fun changePassword(password: String): User
+
+    fun update(user: User): User
 }
 
 @Service
@@ -111,4 +113,7 @@ private class UserServiceImpl(
         return userRepository.save(newUser.toUserEntity()).toUser()
     }
 
+    override fun update(user: User): User {
+        return userRepository.save(user.toUserEntity()).toUser()
+    }
 }
