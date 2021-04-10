@@ -130,8 +130,25 @@ class MapController(
 
     @ApiOperation("Возвращает все проходы.")
     @GetMapping("/entries")
-    fun getAllEntries(): List<EntryDto> {
-        return mapService.getAllEntries().map { it.toEntryDto() }
+    fun getAllEntries(): List<RouteEntryDto> {
+        val routes = mapService.getAllRoutes(false)
+        return mapService.getAllEntries().map { entry ->
+            val route = routes.firstOrNull { it.entries.any { it.id == entry.id } }
+            entry.toRouteEntryDto(route)
+        }
+    }
+
+    @ApiOperation("Возвращает поход.")
+    @GetMapping("/entries/{id}")
+    fun getEntry(
+        @ApiParam("ID похода.")
+        @PathVariable("id")
+        id: Int
+    ): EntryDetailsDto {
+        val route = mapService.getAllRoutes(false).first { route ->
+            route.entries.any { it.id == id }
+        }
+        return mapService.getEntry(id).toEntryDetailsDto(route, userService.getCurrentUser())
     }
 
     private fun Route.toRouteDetailsDto() = toRouteDetailsDto(userService.getCurrentUser())

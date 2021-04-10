@@ -25,9 +25,9 @@ data class RouteEntryDto(
     val id: Int
 )
 
-fun Entry.toRouteEntryDto(route: Route) = RouteEntryDto(
+fun Entry.toRouteEntryDto(route: Route?) = RouteEntryDto(
     date = points.first().timestamp.toDate(),
     duration = points.duration().toDate(),
-    passed = finished(route), // TODO
+    passed = route?.let { finished(it) } ?: true,
     id = id
 )

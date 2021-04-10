@@ -3,6 +3,7 @@ package me.kolotilov.letsagoservice.domain.services
 import me.kolotilov.letsagoservice.configuration.ErrorCode
 import me.kolotilov.letsagoservice.configuration.ServiceException
 import me.kolotilov.letsagoservice.domain.models.*
+import me.kolotilov.letsagoservice.persistance.entities.toEntry
 import me.kolotilov.letsagoservice.persistance.entities.toRoute
 import me.kolotilov.letsagoservice.persistance.entities.toRouteEntity
 import me.kolotilov.letsagoservice.persistance.repositories.EntryRepository
@@ -77,6 +78,8 @@ interface MapService {
      * Возвращает все походы по юзеру.
      */
     fun getAllEntries(): List<Entry>
+
+    fun getEntry(id: Int): Entry
 
     fun clearRoutes()
 
@@ -194,6 +197,10 @@ private class MapServiceImpl(
             passed = (points.last() distance route.points.last()) < 100,
             routeId = routeId
         )
+    }
+
+    override fun getEntry(id: Int): Entry {
+        return entryRepository.findById(id).toNullable()?.toEntry()!!
     }
 }
 
