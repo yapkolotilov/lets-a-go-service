@@ -43,5 +43,5 @@ fun CreateRouteDto.toRoute() = Route(
         )
     ),
     isPublic = isPublic,
-    id = 0
+    id = -1
 )

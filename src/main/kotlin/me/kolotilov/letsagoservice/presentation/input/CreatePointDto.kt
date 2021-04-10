@@ -28,5 +28,5 @@ fun CreatePointDto.toPoint() = Point(
     longitude = longitude,
     altitude = altitude,
     timestamp = timestamp.toDateTime(),
-    id = 0
+    id = -1
 )

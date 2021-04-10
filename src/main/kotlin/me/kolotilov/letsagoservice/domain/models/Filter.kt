@@ -37,7 +37,7 @@ data class Filter(
                 typesAllowed = filters.mapNotNull { it.typesAllowed }.flatten().nullIfEmpty()?.distinct(),
                 groundsAllowed = filters.mapNotNull { it.groundsAllowed }.flatten().nullIfEmpty()?.distinct(),
                 enabled = true,
-                id = 0
+                id = -1
             )
         }
 

@@ -43,7 +43,7 @@ fun FilterDto.toFilter() = Filter(
     typesAllowed = typesAllowed,
     groundsAllowed = groundsAllowed,
     enabled = enabled,
-    id = 0
+    id = -1
 )
 
 fun Filter.toFilterDto() = FilterDto(
