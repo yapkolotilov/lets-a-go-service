@@ -151,5 +151,15 @@ class MapController(
         return mapService.getEntry(id).toEntryDetailsDto(route, userService.getCurrentUser())
     }
 
+    @ApiOperation("Возвращает маршрут на карте")
+    @GetMapping("/routes/{id}/map")
+    fun getRouteOnMap(
+        @ApiParam("ID маршрута.")
+        @PathVariable("id")
+        id: Int
+    ): RouteLineDto {
+        return mapService.getRoute(id).toRouteLineDto()
+    }
+
     private fun Route.toRouteDetailsDto() = toRouteDetailsDto(userService.getCurrentUser())
 }
