@@ -3,14 +3,13 @@ package me.kolotilov.letsagoservice.presentation.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
+import me.kolotilov.letsagoservice.domain.models.Point
 import me.kolotilov.letsagoservice.domain.models.User
 import me.kolotilov.letsagoservice.domain.services.IllnessService
 import me.kolotilov.letsagoservice.domain.services.MapService
 import me.kolotilov.letsagoservice.domain.services.SymptomService
 import me.kolotilov.letsagoservice.domain.services.UserService
-import me.kolotilov.letsagoservice.presentation.input.ChangePasswordDto
-import me.kolotilov.letsagoservice.presentation.input.EditDetailsDto
-import me.kolotilov.letsagoservice.presentation.input.toFilter
+import me.kolotilov.letsagoservice.presentation.input.*
 import me.kolotilov.letsagoservice.presentation.output.UserDetailsDto
 import me.kolotilov.letsagoservice.presentation.output.toUserDetailsDto
 import me.kolotilov.letsagoservice.utils.toDateTime
@@ -28,8 +27,8 @@ class DetailsController(
 
     @ApiOperation("Возвращает данные о здоровье пользователя.")
     @GetMapping
-    fun getDetails(): UserDetailsDto {
-        return userService.getCurrentUser().toUserDetailsDto()
+    fun getDetails(userLocation: CreatePointDto?): UserDetailsDto {
+        return userService.getCurrentUser().toUserDetailsDto(userLocation?.toPoint())
     }
 
     @ApiOperation("Редактирование данных о здоровье пользователя.")
@@ -73,5 +72,5 @@ class DetailsController(
         return symptomService.getAllApproved().map { it.name }
     }
 
-    private fun User.toUserDetailsDto() = toUserDetailsDto(mapService.getAllRoutes(false))
+    private fun User.toUserDetailsDto(userLocation: Point? = null) = toUserDetailsDto(mapService.getAllRoutes(false), userLocation = userLocation)
 }

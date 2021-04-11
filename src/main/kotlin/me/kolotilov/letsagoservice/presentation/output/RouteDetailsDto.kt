@@ -39,7 +39,7 @@ class RouteDetailsDto(
     val ground: Route.Ground?,
     @ApiModelProperty("Походы.")
     @JsonProperty("entries")
-    val entries: List<RouteEntryDto>,
+    val entries: List<EntryItemDto>,
     @ApiModelProperty("Свой ли маршрут.")
     @JsonProperty("mine")
     val mine: Boolean,

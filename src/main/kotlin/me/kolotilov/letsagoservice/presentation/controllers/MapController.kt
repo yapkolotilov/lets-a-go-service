@@ -130,7 +130,7 @@ class MapController(
 
     @ApiOperation("Возвращает все проходы.")
     @GetMapping("/entries")
-    fun getAllEntries(): List<RouteEntryDto> {
+    fun getAllEntries(): List<EntryItemDto> {
         val routes = mapService.getAllRoutes(false)
         return mapService.getAllEntries().map { entry ->
             val route = routes.firstOrNull { it.entries.any { it.id == entry.id } }

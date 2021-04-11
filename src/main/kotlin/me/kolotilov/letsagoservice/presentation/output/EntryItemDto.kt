@@ -10,7 +10,7 @@ import me.kolotilov.letsagoservice.utils.toDate
 import java.util.*
 
 @ApiModel("RouteEntryDto: Поход.")
-data class RouteEntryDto(
+data class EntryItemDto(
     @ApiModelProperty("Дата похода")
     @JsonProperty("date")
     val date: Date,
@@ -25,7 +25,7 @@ data class RouteEntryDto(
     val id: Int
 )
 
-fun Entry.toRouteEntryDto(route: Route?) = RouteEntryDto(
+fun Entry.toRouteEntryDto(route: Route?) = EntryItemDto(
     date = points.first().timestamp.toDate(),
     duration = points.duration().toDate(),
     passed = route?.let { finished(it) } ?: true,
