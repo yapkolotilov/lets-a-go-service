@@ -3,7 +3,9 @@ package me.kolotilov.letsagoservice.presentation.output
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
+import me.kolotilov.letsagoservice.domain.models.Route
 import me.kolotilov.letsagoservice.domain.models.User
+import me.kolotilov.letsagoservice.domain.services.kiloCaloriesBurnt
 import me.kolotilov.letsagoservice.presentation.input.FilterDto
 import me.kolotilov.letsagoservice.presentation.input.toFilterDto
 import org.joda.time.DateTime
@@ -38,10 +40,19 @@ data class UserDetailsDto(
     val symptoms: List<String>,
     @ApiModelProperty("Фильтр")
     @JsonProperty("filter")
-    val filter: FilterDto
+    val filter: FilterDto,
+    @ApiModelProperty("Всего расстояния пройдено.")
+    @JsonProperty("total_distance")
+    val totalDistance: Double,
+    @ApiModelProperty("Всего калорий сожжено.")
+    @JsonProperty("total_calories_burnt")
+    val totalKilocaloriesBurnt: Int?,
+    @ApiModelProperty("Походы.")
+    @JsonProperty("entries")
+    val entries: List<RouteEntryDto>
 )
 
-fun User.toUserDetailsDto() = UserDetailsDto(
+fun User.toUserDetailsDto(routes: List<Route>) = UserDetailsDto(
     username = username,
     name = name.takeIf { !it.isNullOrEmpty() },
     age = birthDate?.let { Years.yearsBetween(it, DateTime.now()) }?.years,
@@ -50,5 +61,14 @@ fun User.toUserDetailsDto() = UserDetailsDto(
     weight = weight,
     illnesses = illnesses.map { it.name },
     symptoms = symptoms.map { it.name },
-    filter = filter.toFilterDto()
+    filter = filter.toFilterDto(),
+    totalDistance = entries.sumByDouble { it.distance() },
+    totalKilocaloriesBurnt = entries.sumBy { entry ->
+        val route = routes.firstOrNull { it.entries.any { it.id == entry.id } }
+        kiloCaloriesBurnt(this, route?.type, entry.points) ?: 0
+    }.takeIf { it != 0 },
+    entries = entries.map { entry ->
+        val route = routes.firstOrNull { it.entries.any { it.id == entry.id } }
+        entry.toRouteEntryDto(route)
+    }
 )

@@ -33,19 +33,19 @@ data class EntryDetailsDto(
     val kiloCaloriesBurnt: Int?,
     @ApiModelProperty("ID маршрута.")
     @JsonProperty("route_id")
-    val routeId: Int,
+    val routeId: Int?,
     @ApiModelProperty("ID.")
     @JsonProperty("id")
     val id: Int
 )
 
-fun Entry.toEntryDetailsDto(route: Route, user: User) = EntryDetailsDto(
-    finished = finished(route),
+fun Entry.toEntryDetailsDto(route: Route?, user: User) = EntryDetailsDto(
+    finished = route?.let { finished(it) } ?: true,
     date = startDate().toDate(),
     duration = duration().toDate(),
     distance = distance(),
-    kiloCaloriesBurnt = kiloCaloriesBurnt(user, route.type, points),
-    routeId = route.id,
+    kiloCaloriesBurnt = kiloCaloriesBurnt(user, route?.type, points),
+    routeId = route?.id,
     altitudeDelta = points.altitudeDelta(),
     speed = points.speed(),
     id = id
