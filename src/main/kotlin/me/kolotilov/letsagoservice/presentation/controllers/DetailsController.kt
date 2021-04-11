@@ -32,7 +32,7 @@ class DetailsController(
     }
 
     @ApiOperation("Редактирование данных о здоровье пользователя.")
-    @PostMapping
+    @PostMapping("/edit")
     fun editDetails(
         @ApiParam("Данные о здоровье пользователя.")
         @RequestBody
