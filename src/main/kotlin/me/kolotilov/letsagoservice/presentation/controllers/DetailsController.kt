@@ -27,7 +27,7 @@ class DetailsController(
 
     @ApiOperation("Возвращает данные о здоровье пользователя.")
     @PostMapping
-    fun getDetails(userLocation: CreatePointDto?): UserDetailsDto {
+    fun getDetails(userLocation: CreatePointDto? = null): UserDetailsDto {
         return userService.getCurrentUser().toUserDetailsDto(userLocation?.toPoint())
     }
 
