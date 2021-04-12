@@ -118,7 +118,7 @@ private class MapServiceImpl(
         return routeRepository.findAll()
             .map { it.toRoute() }
             .filter { route ->
-                name?.let { route.name?.contains(name, true) ?: true } ?: true
+                name?.let { (route.name ?: "Маршрут").contains(name, true) } ?: true
             }
             .filter { filter?.matches(it) ?: true }
     }

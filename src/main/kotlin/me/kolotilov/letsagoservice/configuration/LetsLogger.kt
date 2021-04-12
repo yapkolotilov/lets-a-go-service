@@ -39,6 +39,6 @@ private class LetsLoggerImpl(
     }
 
     private fun message(level: String, message: Any): String {
-        return "${dateFormat.format(Date())}: $level: $tag: $message"
+        return "${dateFormat.format(Date())} : $level: [$tag]: $message"
     }
 }
