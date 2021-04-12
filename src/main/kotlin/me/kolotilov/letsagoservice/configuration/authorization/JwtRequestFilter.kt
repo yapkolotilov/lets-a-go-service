@@ -40,6 +40,7 @@ class JwtRequestFilter : OncePerRequestFilter() {
             jwt = authorizationHeader.substring(7)
             username = jwtUtils.extractUsername(jwt)
         }
+        println("BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH")
 
         if (username != null && SecurityContextHolder.getContext().authentication == null) {
             val details = userDetailsService.loadUserByUsername(username)
