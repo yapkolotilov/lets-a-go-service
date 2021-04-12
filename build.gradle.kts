@@ -42,7 +42,6 @@ dependencies {
 
     // Прочее:
     implementation("joda-time", "joda-time", "2.10.9")
-    implementation("io.github.microutils", "kotlin-logging", "1.12.0")
 }
 
 tasks.withType<KotlinCompile> {

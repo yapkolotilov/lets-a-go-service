@@ -1,10 +1,11 @@
 package me.kolotilov.letsagoservice.presentation.controllers
 
-import mu.KotlinLogging
+import me.kolotilov.letsagoservice.configuration.LetsLogger
+
 
 abstract class BaseController(
     private val tag: String
 ) {
 
-    protected val logger = KotlinLogging.logger(tag)
+    protected val log = LetsLogger(tag)
 }

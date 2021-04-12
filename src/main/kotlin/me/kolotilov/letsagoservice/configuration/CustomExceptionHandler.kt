@@ -2,7 +2,6 @@ package me.kolotilov.letsagoservice.configuration
 
 import me.kolotilov.letsagoservice.presentation.output.ErrorDto
 import me.kolotilov.letsagoservice.presentation.output.toErrorDto
-import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,12 +14,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 class CustomExceptionHandler : ResponseEntityExceptionHandler() {
 
-    private val log = KotlinLogging.logger("ERRORS")
+    private val log = LetsLogger("EXCEPTION_HANDLER")
 
     @ExceptionHandler(ServiceException::class)
     fun handleServiceConflict(e: ServiceException, request: WebRequest): ResponseEntity<*> {
-        log.error(e.toString())
-        e.printStackTrace()
+        log.warn(e.toString())
         return handleExceptionInternal(e, e.toErrorDto(), HttpHeaders(), e.status, request)
     }
 
@@ -34,7 +32,6 @@ class CustomExceptionHandler : ResponseEntityExceptionHandler() {
             stackTrace = e.stackTraceToString()
         )
         log.error(e.toString())
-        e.printStackTrace()
         return handleExceptionInternal(e, body, HttpHeaders(), status, request)
     }
 }

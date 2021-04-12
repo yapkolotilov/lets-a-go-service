@@ -40,12 +40,14 @@ class MapController(
 
     @ApiOperation("Поиск маршрута.")
     @PostMapping("/routes/search")
-    fun findRoutes(
+    fun searchRoutes(
         @ApiParam("Запрос.")
         @RequestBody
         query: SearchRoutesDto
     ): List<RouteItemDto> {
+        log.info("search routes: name: ${query.name != null}, filter: ${query.filter != null}")
         return mapService.findRoutes(query.name, query.filter?.toFilter())
+            .also { log.info("search routes: found routes: ${it.size}") }
             .map { it.toRouteItemDto(query.userLocation?.toPoint()) }
     }
 
