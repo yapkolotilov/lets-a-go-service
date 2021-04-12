@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+import java.util.stream.Collectors
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -27,7 +28,7 @@ class JwtRequestFilter : OncePerRequestFilter() {
     @Autowired
     private lateinit var jwtUtils: JwtUtils
 
-    private val log: LetsLogger = LetsLogger("REQUEST")
+    private val log: LetsLogger = LetsLogger("MESSAGING")
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -52,8 +53,7 @@ class JwtRequestFilter : OncePerRequestFilter() {
                 SecurityContextHolder.getContext().authentication = token
             }
         }
-        log.info("REQUEST = $request")
-        log.info("RESPONSE= $response")
+        log.info("REQUEST = ${request.reader.lines().collect(Collectors.joining(System.lineSeparator()))}")
         filterChain.doFilter(request, response)
     }
 }
