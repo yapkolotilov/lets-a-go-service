@@ -45,7 +45,7 @@ class MapController(
         @RequestBody
         query: SearchRoutesDto
     ): List<RouteItemDto> {
-        log.info("search routes: name: ${query.name}, filter: ${query.filter}")
+        log.info("search routes: name: ${query.name}, filter: ${query.filter?.toFilter()}")
         return mapService.findRoutes(query.name, query.filter?.toFilter())
             .also { log.info("search routes: found routes: ${it.size}") }
             .map { it.toRouteItemDto(query.userLocation?.toPoint()) }
