@@ -1,6 +1,7 @@
 package me.kolotilov.letsagoservice.domain.services
 
 import me.kolotilov.letsagoservice.configuration.ErrorCode
+import me.kolotilov.letsagoservice.configuration.LetsLogger
 import me.kolotilov.letsagoservice.configuration.ServiceException
 import me.kolotilov.letsagoservice.domain.models.*
 import me.kolotilov.letsagoservice.persistance.entities.toEntry
@@ -216,6 +217,7 @@ private class MapServiceImpl(
 }
 
 fun kiloCaloriesBurnt(user: User, type: Route.Type?, points: List<Point>): Int? {
+    val log = LetsLogger("KILOCALORIES")
     if (user.height == null || user.weight == null) return null
     return when (type) {
         Route.Type.WALKING -> {
@@ -226,6 +228,7 @@ fun kiloCaloriesBurnt(user: User, type: Route.Type?, points: List<Point>): Int? 
             user.weight * points.distance() / 1000
         }
         Route.Type.CYCLING -> {
+            log.info("weight = ${user.weight}, duration = ${points.duration().standardMinutes}")
             0.014 * user.weight * points.duration().standardMinutes * (0.12 * 158 - 7)
         }
         else -> return null
