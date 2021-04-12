@@ -20,6 +20,7 @@ class DatabaseInitializer(
 
     @PostConstruct
     fun initialize() {
+        println("bruh")
         entitiesService.clear()
 
         symptomService.createAll(
