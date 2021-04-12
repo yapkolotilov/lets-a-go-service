@@ -41,15 +41,12 @@ class MapController(
     @ApiOperation("Поиск маршрута.")
     @PostMapping("/routes/search")
     fun findRoutes(
-        @ApiParam("Название маршрута.")
-        @RequestParam("name")
-        name: String?,
-        @ApiParam("Фильтр.")
+        @ApiParam("Запрос.")
         @RequestBody
-        filter: FilterDto?
-    ): List<RouteDetailsDto> {
-        return mapService.findRoutes(name, filter?.toFilter())
-            .map { it.toRouteDetailsDto() }
+        query: SearchRoutesDto
+    ): List<RouteItemDto> {
+        return mapService.findRoutes(query.name, query.filter?.toFilter())
+            .map { it.toRouteItemDto(query.userLocation?.toPoint()) }
     }
 
     @ApiOperation("Превью маршрута.")

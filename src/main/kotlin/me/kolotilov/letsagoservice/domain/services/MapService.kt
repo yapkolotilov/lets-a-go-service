@@ -117,7 +117,9 @@ private class MapServiceImpl(
     override fun findRoutes(name: String?, filter: Filter?): List<Route> {
         return routeRepository.findAll()
             .map { it.toRoute() }
-            .filter { name?.equals(it.name) ?: true }
+            .filter { route ->
+                name?.let { route.name?.contains(name, true) ?: true } ?: true
+            }
             .filter { filter?.matches(it) ?: true }
     }
 
