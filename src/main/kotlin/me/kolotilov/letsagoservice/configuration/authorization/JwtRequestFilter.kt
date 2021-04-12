@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.util.stream.Collectors
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -53,7 +52,7 @@ class JwtRequestFilter : OncePerRequestFilter() {
                 SecurityContextHolder.getContext().authentication = token
             }
         }
-        log.info("REQUEST = ${request.reader.lines().collect(Collectors.joining(System.lineSeparator()))}")
+        log.info("REQUEST = ${request.pathInfo}")
         filterChain.doFilter(request, response)
     }
 }
