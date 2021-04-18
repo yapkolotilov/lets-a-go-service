@@ -3,8 +3,6 @@ package me.kolotilov.letsagoservice.presentation.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
-import me.kolotilov.letsagoservice.configuration.ErrorCode
-import me.kolotilov.letsagoservice.configuration.ServiceException
 import me.kolotilov.letsagoservice.domain.models.Route
 import me.kolotilov.letsagoservice.domain.services.MapService
 import me.kolotilov.letsagoservice.domain.services.UserService
@@ -106,10 +104,7 @@ class MapController(
         @RequestBody
         location: CreatePointDto
     ): StartEntryDto {
-        val route = mapService.getRoute(id)
-        if (location.toPoint() distance route.points.first() > 20)
-            throw ServiceException(ErrorCode.TOO_FAR_FROM_ROUTE)
-        return mapService.getRoute(id).toStartEntryDto()
+        return mapService.startEntry(id, location.toPoint()).toStartEntryDto()
     }
 
     @ApiOperation("Превью похода.")

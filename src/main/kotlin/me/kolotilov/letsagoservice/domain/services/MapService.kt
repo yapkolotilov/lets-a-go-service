@@ -88,6 +88,8 @@ interface MapService {
     fun getRoutePreview(points: List<Point>): RoutePreview
 
     fun entryPreview(routeId: Int, points: List<Point>): EntryPreview
+
+    fun startEntry(id: Int, location: Point): Route
 }
 
 @Service
@@ -96,6 +98,11 @@ private class MapServiceImpl(
     private val entryRepository: EntryRepository,
     private val userService: UserService
 ) : MapService {
+
+    companion object {
+
+        private const val MIN_DISTANCE_TO_ROUTE = 20.0
+    }
 
     override fun getAllRoutes(filter: Boolean): List<Route> {
         val user = userService.getCurrentUser()
@@ -200,6 +207,12 @@ private class MapServiceImpl(
         val route = getRoute(routeId)
         if (points.isEmpty())
             throw ServiceException(ErrorCode.ENTRY_TOO_SHORT)
+        val startPoint = route.points.first()
+        val endPoint = route.points.last()
+        val lastPoint = points.last()
+        if (lastPoint distance startPoint > MIN_DISTANCE_TO_ROUTE && lastPoint distance endPoint > MIN_DISTANCE_TO_ROUTE)
+            throw ServiceException(ErrorCode.TOO_FAR_FROM_ROUTE)
+
         return EntryPreview(
             distance = points.distance(),
             duration = points.duration(),
@@ -213,6 +226,15 @@ private class MapServiceImpl(
 
     override fun getEntry(id: Int): Entry {
         return entryRepository.findById(id).toNullable()?.toEntry()!!
+    }
+
+    override fun startEntry(id: Int, location: Point): Route {
+        val route = getRoute(id)
+        val startPoint = route.points.first()
+        val endPoint = route.points.last()
+        if (location distance startPoint > MIN_DISTANCE_TO_ROUTE && location distance endPoint > MIN_DISTANCE_TO_ROUTE)
+            throw ServiceException(ErrorCode.TOO_FAR_FROM_ROUTE)
+        return route
     }
 }
 
