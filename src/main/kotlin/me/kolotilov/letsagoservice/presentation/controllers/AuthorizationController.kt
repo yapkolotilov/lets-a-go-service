@@ -4,6 +4,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import me.kolotilov.letsagoservice.configuration.ErrorCode
+import me.kolotilov.letsagoservice.configuration.ServiceException
 import me.kolotilov.letsagoservice.configuration.authorization.JwtUtils
 import me.kolotilov.letsagoservice.configuration.authorization.UserDetailsServiceImpl
 import me.kolotilov.letsagoservice.configuration.toServiceException
@@ -50,6 +51,9 @@ class AuthorizationController(
     ): TokenDto {
         return try {
             val userDetails = userDetailsService.loadUserByUsername(request.username)
+            if (!userDetails.isEnabled)
+                throw ServiceException(code = ErrorCode.CONFIRM_EMAIL)
+
             authenticationManager.authenticate(UsernamePasswordAuthenticationToken(request.username, request.password))
             val jwt = jwtUtils.generateToken(userDetails)
             TokenDto(jwt)
