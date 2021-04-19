@@ -72,7 +72,7 @@ class AuthorizationController(
     @GetMapping("/confirm_email/{url}")
     fun confirmEmail(@PathVariable("url") url: String): String {
         return if (authService.confirmEmail(url))
-            "e-mail подтверждён"
+            "<h3>e-mail подтверждён! Можете возвращаться в приложение.</h3>"
         else
             "Некорректный URL"
     }

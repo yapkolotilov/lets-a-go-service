@@ -41,6 +41,11 @@ enum class ErrorCode {
     INVALID_PASSWORD,
 
     /**
+     * Неправильный email.
+     */
+    INVALID_USERNAME,
+
+    /**
      * Пользователь уже зарегистрирован.
      */
     USER_ALREADY_EXITS,
