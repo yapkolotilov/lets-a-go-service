@@ -13,6 +13,8 @@ class RouteDetailsDto(
     @ApiModelProperty("Название.")
     @JsonProperty("name")
     val name: String?,
+    @JsonProperty("public")
+    val public: Boolean,
     @ApiModelProperty("Расстояние.")
     @JsonProperty("distance")
     val distance: Double,
@@ -58,6 +60,7 @@ fun Route.toRouteDetailsDto(user: User): RouteDetailsDto {
     val entries = entries.filter { user.entries.contains(it) }
     return RouteDetailsDto(
         name = name,
+        public = isPublic,
         distance = points.distance(),
         duration = points.duration().toDate(),
         altitudeDelta = points.altitudeDelta(),
