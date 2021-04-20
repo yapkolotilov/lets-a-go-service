@@ -72,7 +72,7 @@ fun User.toUserDetailsDto(routes: List<Route>, userLocation: Point?) = UserDetai
         kiloCaloriesBurnt(this, route?.type, entry.points) ?: 0
     }.takeIf { it != 0 },
     routes = routes.map { it.toRouteItemDto(userLocation) },
-    entries = entrieros.map { entry ->
+    entries = entries.map { entry ->
         val route = routes.firstOrNull { it.entries.any { it.id == entry.id } }
         entry.toRouteEntryDto(route)
     }
