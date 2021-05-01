@@ -26,12 +26,5 @@ class EntitiesServiceImpl(
 ) : EntitiesService {
 
     override fun clear() {
-//        filterRepository.deleteAll()
-//        symptomRepository.deleteAll()
-//        illnessRepository.deleteAll()
-//        pointRepository.deleteAll()
-//        entryRepository.deleteAll()
-//        routeRepository.deleteAll()
-//        userRepository.deleteAll()
     }
 }

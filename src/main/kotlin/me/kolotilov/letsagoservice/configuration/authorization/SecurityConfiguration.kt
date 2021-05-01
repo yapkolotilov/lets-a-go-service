@@ -11,11 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.crypto.password.NoOpPasswordEncoder
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.filter.OncePerRequestFilter
 
+/**
+ * Конфигурация безопасности.
+ */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
     prePostEnabled = true,
@@ -43,6 +46,7 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     }
 
     override fun configure(http: HttpSecurity) {
+        // Разрешаем только запросы на авторизацию и тестовые, остальные фильтруем по токену.
         http.csrf().disable()
             .authorizeRequests()
             .antMatchers("/auth/**", "/test/**").permitAll()
@@ -56,7 +60,7 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     @Bean
     @Suppress("DEPRECATION")
-    fun passwordEncoder(): PasswordEncoder = NoOpPasswordEncoder.getInstance()
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
     override fun authenticationManagerBean(): AuthenticationManager {

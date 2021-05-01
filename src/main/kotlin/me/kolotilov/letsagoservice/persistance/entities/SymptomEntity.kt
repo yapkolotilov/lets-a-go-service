@@ -1,4 +1,4 @@
-package me.kolotilov.letsagoservice.persistance.entities
+    package me.kolotilov.letsagoservice.persistance.entities
 
 import me.kolotilov.letsagoservice.domain.models.Symptom
 import javax.persistence.*

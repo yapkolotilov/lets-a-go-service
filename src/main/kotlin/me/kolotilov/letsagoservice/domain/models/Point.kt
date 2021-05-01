@@ -9,6 +9,7 @@ import kotlin.math.*
  *
  * @param latitude Широта.
  * @param longitude Долгота.
+ * @param altitude Высота.
  * @param timestamp Время прохождения точки.
  * @param id ID точки.
  */
@@ -20,11 +21,19 @@ data class Point(
     val id: Int
 ) {
 
+    /**
+     * Расстояние до другой точки.
+     *
+     * @param other Другая точка.
+     */
     infix fun distance(other: Point): Double {
         return distance(latitude, other.latitude, longitude, other.longitude)
     }
 }
 
+/**
+ * Длина маршрута.
+ */
 fun List<Point>.distance(): Double {
     var result = 0.0
     for (i in 0 until lastIndex)
@@ -32,14 +41,23 @@ fun List<Point>.distance(): Double {
     return result
 }
 
+/**
+ * Продолжительность маршрута.
+ */
 fun List<Point>.duration(): Duration {
     return Duration(firstOrNull()?.timestamp ?: DateTime.now(), lastOrNull()?.timestamp ?: DateTime.now())
 }
 
+/**
+ * Средняя скорость.
+ */
 fun List<Point>.speed(): Double {
     return (distance() / 1000) / (duration().millis.toDouble() / (60 * 60 * 1000))
 }
 
+/**
+ * Перепад высот.
+ */
 fun List<Point>.altitudeDelta(): Double {
     return maxOf { it.altitude } - minOf { it.altitude }
 }

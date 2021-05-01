@@ -13,6 +13,11 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * Фильтр запросов.
+ *
+ * Отвечает за авторизацию и логгирование запросов.
+ */
 @Component
 @Qualifier(JwtRequestFilter.QUALIFIER)
 class JwtRequestFilter : OncePerRequestFilter() {

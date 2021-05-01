@@ -4,6 +4,9 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Логгер для проекта.
+ */
 interface LetsLogger {
 
     companion object {
@@ -13,10 +16,25 @@ interface LetsLogger {
         }
     }
 
+    /**
+     * Логгинг уровня INFO.
+     *
+     * @param message Сообщение.
+     */
     fun info(message: Any)
 
+    /**
+     * Логгинг уровня WARN.
+     *
+     * @param message Сообщение.
+     */
     fun warn(message: Any)
 
+    /**
+     * Логгинг уровня ERROR.
+     *
+     * @param message Сообщение.
+     */
     fun error(message: Any)
 }
 

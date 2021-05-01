@@ -7,12 +7,34 @@ import org.joda.time.DateTime
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 
+/**
+ * Утилиты для работы с JWT.
+ *
+ */
 interface JwtUtils {
 
+    /**
+     * Получает username из токена.
+     *
+     * @param token Токен.
+     */
     fun extractUsername(token: String): String
 
+    /**
+     * Генерирует токен на основе информации о пользователе.
+     *
+     * @param userDetails Информация о пользователе.
+     */
     fun generateToken(userDetails: UserDetails): String
 
+    /**
+     * Валидирует токен.
+     *
+     * @param token Токен.
+     * @param userDetails Информация о пользователе.
+     *
+     * @return true, если токен валидный.
+     */
     fun validateToken(token: String, userDetails: UserDetails): Boolean
 }
 

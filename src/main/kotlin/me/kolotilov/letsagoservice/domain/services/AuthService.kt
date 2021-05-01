@@ -13,6 +13,9 @@ import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
 import kotlin.streams.asSequence
 
+/**
+ * Сервис авторизации.
+ */
 interface AuthService {
 
     /**
@@ -48,12 +51,6 @@ class AuthServiceImpl(
     }
 
     override fun register(username: String, password: String) {
-//        val emailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}\$".toRegex(RegexOption.IGNORE_CASE)
-//        if (!emailRegex.matches(username))
-//            throw ServiceException(
-//                code = ErrorCode.INVALID_USERNAME,
-//                message = "Неправильный e-mail!"
-//            )
         if (get(username) != null)
             throw ServiceException(
                 code = ErrorCode.USER_ALREADY_EXITS,
@@ -120,10 +117,9 @@ class AuthServiceImpl(
             setFrom("letsagoservice@gmail.com")
             setTo(email)
             setSubject("Подтверждение e-mail")
-//            val baseUrl = "localhost:8080"
             val baseUrl = "https://lets-a-go.herokuapp.com"
             setText("<h4>Приветствуем вас!</h4>\n" +
-                    "Перейдите по ссылке для подтверждения e-mail: <a>https://lets-a-go.herokuapp.com/auth/confirm_email/$url</a>", true)
+                    "Перейдите по ссылке для подтверждения e-mail: <a>$baseUrl/auth/confirm_email/$url</a>", true)
         }
         mailSender.send(mimeMessage)
     }

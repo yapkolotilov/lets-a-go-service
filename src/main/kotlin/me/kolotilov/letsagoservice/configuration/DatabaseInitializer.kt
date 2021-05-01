@@ -11,6 +11,9 @@ import org.joda.time.Duration
 import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct
 
+/**
+ * Наполняет тестовыми данными базу заболеваний.
+ */
 @Component
 class DatabaseInitializer(
     private val symptomService: SymptomService,
@@ -22,6 +25,7 @@ class DatabaseInitializer(
     fun initialize() {
         entitiesService.clear()
 
+        // Инициализируем симптомы:
         symptomService.createAll(
             "Тяжесть",
             "Боли в ногах",
@@ -30,6 +34,7 @@ class DatabaseInitializer(
             "Отёчность"
         )
 
+        // Инициализируем заболевания:
         illnessService.createAll(
             Illness(
                 "Варикоз", true, listOf(

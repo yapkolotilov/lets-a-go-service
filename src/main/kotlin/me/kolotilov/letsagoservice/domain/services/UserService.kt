@@ -58,6 +58,11 @@ interface UserService {
      */
     fun changePassword(password: String): User
 
+    /**
+     * Обновляет информацию о пользователе.
+     *
+     * @param user Пользователь.
+     */
     fun update(user: User): User
 }
 

@@ -81,14 +81,39 @@ interface MapService {
      */
     fun getAllEntries(): List<Entry>
 
+    /**
+     * Получение похода по ID.
+     *
+     * @param ID ID похода.
+     */
     fun getEntry(id: Int): Entry
 
+    /**
+     * Очищает все маршруты.
+     */
     fun clearRoutes()
 
+    /**
+     * Предпросмотр маршрута.
+     *
+     * @param points Пройденные точки.
+     */
     fun getRoutePreview(points: List<Point>): RoutePreview
 
+    /**
+     * Предпросмотр похода.
+     *
+     * @param points Пройденные точки.
+     * @param routeId ID маршрута.
+     */
     fun entryPreview(routeId: Int, points: List<Point>): EntryPreview
 
+    /**
+     * Начало записи маршрута.
+     *
+     * @param id ID маршрута.
+     * @param location Текущая локация пользователя.
+     */
     fun startEntry(id: Int, location: Point): Route
 }
 
@@ -238,6 +263,13 @@ private class MapServiceImpl(
     }
 }
 
+/**
+ * Подсчёт сожжёных килокалорий.
+ *
+ * @param user Пользователь.
+ * @param type Тип маршрута.
+ * @param points Точки маршрута.
+ */
 fun kiloCaloriesBurnt(user: User, type: Route.Type?, points: List<Point>): Int? {
     val log = LetsLogger("KILOCALORIES")
     if (user.height == null || user.weight == null) return null
@@ -255,4 +287,15 @@ fun kiloCaloriesBurnt(user: User, type: Route.Type?, points: List<Point>): Int? 
         }
         else -> return null
     }.roundToInt()
+}
+
+/**
+ * Вычисляет индекс массы тела пользователя.
+ *
+ * @param user Пользователь.
+ */
+fun bodyMassIndex(user: User): Int? {
+    val weight = user.weight ?: return null
+    val height = user.height ?: return null
+    return weight / (height * height)
 }
