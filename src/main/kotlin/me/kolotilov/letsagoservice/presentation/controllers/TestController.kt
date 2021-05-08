@@ -27,7 +27,7 @@ class TestController(
 
     @DeleteMapping("users/clear")
     fun clearUsers() {
-        mapService.clearRoutes()
+        mapService.clearUsers()
     }
 
     @GetMapping("/entries")
