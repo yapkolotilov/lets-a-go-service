@@ -52,7 +52,7 @@ fun List<Point>.duration(): Duration {
  * Средняя скорость.
  */
 fun List<Point>.speed(): Double {
-    return (distance() / 1000) / (duration().millis.toDouble() / (60 * 60 * 1000))
+    return (distance() / 1000) / (duration().millis.toDouble() / (60 * 60 * 1000)) / 10
 }
 
 /**
