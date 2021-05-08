@@ -93,6 +93,8 @@ interface MapService {
      */
     fun clearRoutes()
 
+    fun clearUsers()
+
     /**
      * Предпросмотр маршрута.
      *
@@ -196,6 +198,10 @@ private class MapServiceImpl(
 
     override fun clearRoutes() {
         routeRepository.deleteAll()
+    }
+
+    override fun clearUsers() {
+        userService.deleteAll()
     }
 
     override fun getRoutePreview(points: List<Point>): RoutePreview {

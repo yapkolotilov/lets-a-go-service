@@ -64,6 +64,8 @@ interface UserService {
      * @param user Пользователь.
      */
     fun update(user: User): User
+
+    fun deleteAll()
 }
 
 @Service
@@ -120,5 +122,9 @@ private class UserServiceImpl(
 
     override fun update(user: User): User {
         return userRepository.save(user.toUserEntity()).toUser()
+    }
+
+    override fun deleteAll() {
+        userRepository.deleteAll()
     }
 }
