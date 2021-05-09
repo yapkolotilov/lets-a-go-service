@@ -33,6 +33,7 @@ dependencies {
 
     // SQL:
     runtimeOnly("org.postgresql", "postgresql")
+    runtimeOnly("com.h2database", "h2")
 
     // Swagger:
     implementation("io.springfox", "springfox-swagger-ui", "2.9.2")
@@ -40,6 +41,11 @@ dependencies {
     // JWT:
     implementation("io.jsonwebtoken", "jjwt", "0.9.1")
     implementation("javax.xml.bind", "jaxb-api", "2.3.0")
+
+    // Тест:
+    testImplementation("org.springframework.boot", "spring-boot-starter-test")
+    testImplementation("org.junit.vintage", "junit-vintage-engine")
+    testImplementation(kotlin("test"))
 
     // Прочее:
     implementation("joda-time", "joda-time", "2.10.9")
