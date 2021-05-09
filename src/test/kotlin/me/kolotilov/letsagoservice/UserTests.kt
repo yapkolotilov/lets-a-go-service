@@ -57,6 +57,7 @@ class UserTests : BaseTests() {
         val newPassword = "test1234"
         val newUser = userService.changePassword(newPassword)
 
+
         assertEquals(newPassword, newUser.password)
     }
 }
