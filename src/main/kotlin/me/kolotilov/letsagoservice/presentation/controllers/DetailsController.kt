@@ -47,7 +47,7 @@ class DetailsController(
             symptoms = details.symptoms?.let { symptomService.getOrCreateAll(details.symptoms) },
             filter = details.filter?.toFilter(),
             updateFilter = details.updateFilter,
-        ).toUserDetailsDto()
+        ).toUserDetailsDto(null)
     }
 
     @ApiOperation("Смена пароля.")
@@ -57,7 +57,7 @@ class DetailsController(
         @RequestBody
         passwordDto: ChangePasswordDto
     ): UserDetailsDto {
-        return userService.changePassword(passwordDto.password).toUserDetailsDto()
+        return userService.changePassword(passwordDto.password).toUserDetailsDto(null)
     }
 
     @ApiOperation("Возвращает список всех доступных заболеваний.")
@@ -71,6 +71,4 @@ class DetailsController(
     fun getSymptoms(): List<String> {
         return symptomService.getAllApproved().map { it.name }
     }
-
-    private fun User.toUserDetailsDto(userLocation: Point? = null) = toUserDetailsDto(mapService.getAllRoutes(false), userLocation = userLocation)
 }

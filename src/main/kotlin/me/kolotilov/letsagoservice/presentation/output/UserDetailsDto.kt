@@ -56,7 +56,7 @@ data class UserDetailsDto(
     val entries: List<EntryItemDto>,
 )
 
-fun User.toUserDetailsDto(routes: List<Route>, userLocation: Point?) = UserDetailsDto(
+fun User.toUserDetailsDto(userLocation: Point?) = UserDetailsDto(
     username = username,
     name = name.takeIf { !it.isNullOrEmpty() },
     age = birthDate?.let { Years.yearsBetween(it, DateTime.now()) }?.years,
