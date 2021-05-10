@@ -34,4 +34,9 @@ class TestController(
     fun getCurrentEntries(): Int {
         return userService.getCurrentUser().entries.size
     }
+
+    @GetMapping("/wakeUp")
+    fun wakeUp(): String {
+        return "<h1>Я проснулся!<h1/>"
+    }
 }
