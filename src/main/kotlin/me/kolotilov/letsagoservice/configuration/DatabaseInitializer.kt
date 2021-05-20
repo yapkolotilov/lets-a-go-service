@@ -51,6 +51,13 @@ class DatabaseInitializer(
                 )
             ),
             Illness(
+                "Артрит", true, listOf(
+                    Symptom("Боли в ногах", true, null),
+                    Symptom("Тяжело сгибать ноги", true, null)
+                ),
+                null
+            ),
+            Illness(
                 "Артроз", true, listOf(
                     Symptom("Боли в ногах", true, null)
                 ),
@@ -63,13 +70,6 @@ class DatabaseInitializer(
                     id = 2
                 )
             ),
-            Illness(
-                "Артрит", true, listOf(
-                    Symptom("Боли в ногах", true, null),
-                    Symptom("Тяжело сгибать ноги", true, null)
-                ),
-                null
-            )
         )
     }
 }
