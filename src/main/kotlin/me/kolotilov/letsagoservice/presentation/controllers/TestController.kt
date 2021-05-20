@@ -2,10 +2,7 @@ package me.kolotilov.letsagoservice.presentation.controllers
 
 import me.kolotilov.letsagoservice.domain.services.MapService
 import me.kolotilov.letsagoservice.domain.services.UserService
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -20,9 +17,9 @@ class TestController(
         return Date()
     }
 
-    @DeleteMapping("/routes/clear")
-    fun clearRoutes() {
-        mapService.clearRoutes()
+    @GetMapping("/wakeUp")
+    fun wakeUp(): String {
+        return "<h1>Я проснулся!<h1/>"
     }
 
     @DeleteMapping("users/clear")
@@ -30,13 +27,8 @@ class TestController(
         mapService.clearUsers()
     }
 
-    @GetMapping("/entries")
-    fun getCurrentEntries(): Int {
-        return userService.getCurrentUser().entries.size
-    }
-
-    @GetMapping("/wakeUp")
-    fun wakeUp(): String {
-        return "<h1>Я проснулся!<h1/>"
+    @DeleteMapping("users/clear/{username}")
+    fun clearUser(@PathVariable("username") username: String) {
+        userService.delete(username)
     }
 }

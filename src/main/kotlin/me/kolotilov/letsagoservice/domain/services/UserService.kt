@@ -66,6 +66,8 @@ interface UserService {
     fun update(user: User): User
 
     fun deleteAll()
+
+    fun delete(username: String)
 }
 
 @Service
@@ -126,5 +128,9 @@ private class UserServiceImpl(
 
     override fun deleteAll() {
         userRepository.deleteAll()
+    }
+
+    override fun delete(username: String) {
+        userRepository.deleteById(username)
     }
 }
