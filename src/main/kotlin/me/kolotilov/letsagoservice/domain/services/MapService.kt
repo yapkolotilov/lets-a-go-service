@@ -282,14 +282,14 @@ fun kiloCaloriesBurnt(user: User, type: Route.Type?, points: List<Point>): Int? 
     return when (type) {
         Route.Type.WALKING -> {
             (0.035 * user.weight +
-                    (points.speed().pow(2) / user.height) * 0.029 * user.weight) * points.duration().standardMinutes
+                    (points.speed()
+                        .pow(2) / user.height) * 0.029 * user.weight) * (points.duration().standardSeconds.toDouble() / 60)
         }
         Route.Type.RUNNING -> {
             user.weight * points.distance() / 1000
         }
         Route.Type.CYCLING -> {
-            log.info("weight = ${user.weight}, duration = ${points.duration().standardMinutes}")
-            0.014 * user.weight * points.duration().standardMinutes * (0.12 * 158 - 7)
+            0.014 * user.weight * (points.duration().standardSeconds.toDouble() / 60) * (0.12 * 158 - 7)
         }
         else -> return null
     }.roundToInt()
