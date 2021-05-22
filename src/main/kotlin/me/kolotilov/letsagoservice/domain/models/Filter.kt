@@ -5,17 +5,18 @@ import org.joda.time.Duration
 /**
  * Фильтр маршрутов.
  *
- * @param maxLength Максимальная длина маршрута (км).
- * @param maxDuration Максимальная продолжительность маршрута.
+ * @param length Максимальная длина маршрута (км).
+ * @param duration Максимальная продолжительность маршрута.
  * @param typesAllowed Разрешённые типы маршрутов.
  * @param groundsAllowed Разрешённые типы покрытия.
  */
 data class Filter(
-        val maxLength: Double?,
-        val maxDuration: Duration?,
-        val typesAllowed: List<Route.Type>?,
-        val groundsAllowed: List<Route.Ground>?,
-        val id: Int
+    val length: ClosedFloatingPointRange<Double>?,
+    val duration: ClosedRange<Duration>?,
+    val typesAllowed: List<Route.Type>?,
+    val groundsAllowed: List<Route.Ground>?,
+    val enabled: Boolean,
+    val id: Int
 ) {
 
     companion object {
@@ -24,12 +25,19 @@ data class Filter(
          * Возвращает логическое пересечение фильтров.
          */
         fun compose(vararg filters: Filter): Filter {
+            val minLength= filters.mapNotNull { it.length?.start }.maxOrNull()
+            val maxLength = filters.mapNotNull { it.length?.endInclusive }.minOrNull()
+
+            val minDuration = filters.mapNotNull { it.duration?.start }.maxOrNull()
+            val maxDuration = filters.mapNotNull { it.duration?.endInclusive }.minOrNull()
+
             return Filter(
-                maxLength = filters.mapNotNull { it.maxLength }.minOrNull(),
-                maxDuration = filters.mapNotNull { it.maxDuration }.minOrNull(),
+                length = if (minLength != null && maxLength != null) minLength..maxLength else null,
+                duration = if (minDuration != null && maxDuration != null) minDuration..maxDuration else null,
                 typesAllowed = filters.mapNotNull { it.typesAllowed }.flatten().nullIfEmpty()?.distinct(),
                 groundsAllowed = filters.mapNotNull { it.groundsAllowed }.flatten().nullIfEmpty()?.distinct(),
-                id = 0
+                enabled = true,
+                id = -1
             )
         }
 
@@ -44,9 +52,11 @@ data class Filter(
      * @param route Маршрут.
      */
     fun matches(route: Route): Boolean {
-        if (maxLength != null && route.length() > maxLength)
+        if (!enabled)
+            return true
+        if (length != null && route.length() !in length)
             return false
-        if (maxDuration != null && route.duration() > maxDuration)
+        if (duration != null && route.duration() !in duration)
             return false
         if (typesAllowed != null && !typesAllowed.contains(route.type))
             return false

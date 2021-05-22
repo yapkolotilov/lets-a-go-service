@@ -1,6 +1,7 @@
 package me.kolotilov.letsagoservice.configuration
 
-import mu.KotlinLogging
+import me.kolotilov.letsagoservice.presentation.output.ErrorDto
+import me.kolotilov.letsagoservice.presentation.output.toErrorDto
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -10,19 +11,37 @@ import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
+/**
+ * Кастомный обработчик ошибок.
+ */
 @ControllerAdvice
 class CustomExceptionHandler : ResponseEntityExceptionHandler() {
 
-    private val logger = KotlinLogging.logger("ERRORS")
+    private val log = LetsLogger("EXCEPTION_HANDLER")
 
+    /**
+     * Логгируем каждую ошибку.
+     *
+     */
+    @ExceptionHandler(ServiceException::class)
+    fun handleServiceConflict(e: ServiceException, request: WebRequest): ResponseEntity<*> {
+        log.warn(e.toString())
+        return handleExceptionInternal(e, e.toErrorDto(), HttpHeaders(), e.status, request)
+    }
+
+    /**
+     * Преобразовываем [ServiceException] в [ErrorDto для отображения на фронте.
+     */
     @ExceptionHandler(Exception::class)
     fun handleConflict(e: Exception, request: WebRequest): ResponseEntity<*> {
         val status = if (e is HttpStatusCodeException) e.statusCode else HttpStatus.BAD_REQUEST
-        val body = linkedMapOf(
-            "error" to e.message
+        val body = ErrorDto(
+            code = ErrorCode.OTHER,
+            status = status.value(),
+            message = e.message ?: "",
+            stackTrace = e.stackTraceToString()
         )
-        logger.error(e)
-        e.printStackTrace()
+        log.error(e.toString())
         return handleExceptionInternal(e, body, HttpHeaders(), status, request)
     }
 }

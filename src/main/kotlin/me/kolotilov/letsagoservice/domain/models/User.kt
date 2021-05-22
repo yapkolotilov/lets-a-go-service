@@ -1,5 +1,7 @@
 package me.kolotilov.letsagoservice.domain.models
 
+import org.joda.time.DateTime
+
 /**
  * Пользователь.
  *
@@ -20,13 +22,13 @@ data class User(
     val username: String,
     val password: String,
     val confirmationUrl: String,
-    val name: String = "",
-    val age: Int = -1,
-    val height: Int = -1,
-    val weight: Int = -1,
+    val name: String? = null,
+    val birthDate: DateTime? = null,
+    val height: Int? = null,
+    val weight: Int? = null,
     val illnesses: List<Illness> = emptyList(),
     val symptoms: List<Symptom> = emptyList(),
-    val filter: Filter = Filter(null, null, null, null, 0),
+    val filter: Filter = Filter(null, null, null, null, true,0),
     val routes: List<Route> = emptyList(),
     val entries: List<Entry> = emptyList()
 )

@@ -16,6 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.filter.OncePerRequestFilter
 
+/**
+ * Конфигурация безопасности.
+ */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
     prePostEnabled = true,
@@ -43,6 +46,7 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     }
 
     override fun configure(http: HttpSecurity) {
+        // Разрешаем только запросы на авторизацию и тестовые, остальные фильтруем по токену.
         http.csrf().disable()
             .authorizeRequests()
             .antMatchers("/auth/**", "/test/**").permitAll()

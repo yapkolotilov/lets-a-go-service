@@ -8,65 +8,43 @@ data class RouteEntity(
         @Column(name = "name")
         val name: String?,
         @Column(name = "difficulty")
-        val difficulty: Int?,
-        @OneToOne(cascade = [CascadeType.ALL])
-        val type: RouteTypeEntity?,
-        @OneToOne(cascade = [CascadeType.ALL])
-        val ground: RouteGroundEntity?,
+        val difficulty: Int,
+        @Enumerated(EnumType.STRING)
+        val type: Route.Type?,
+        @Enumerated(EnumType.STRING)
+        val ground: Route.Ground?,
         @OneToMany(cascade = [CascadeType.ALL])
         @JoinColumn(name = "route_id")
         val points: List<PointEntity>,
         @OneToMany(cascade = [CascadeType.ALL])
         @JoinColumn(name = "route_id")
         val entries: List<EntryEntity>,
+        @Column(name = "public")
+        val public: Boolean,
         @Id
         @GeneratedValue
         @Column(name = "id")
         val id: Int,
 )
 
-@Entity(name = "route_type")
-data class RouteTypeEntity(
-        @Id
-        @Column(name = "name")
-        val name: String
-)
-
-@Entity(name = "route_ground")
-data class RouteGroundEntity(
-        @Id
-        @Column(name = "name")
-        val name: String
-)
-
-fun Route.Type.toRouteTypeEntity() = RouteTypeEntity(
-        name = name
-)
-
-fun RouteTypeEntity.toRouteType() = Route.Type.valueOf(name)
-
-fun Route.Ground.toRouteGroundEntity() = RouteGroundEntity(
-        name = name
-)
-
-fun RouteGroundEntity.toRouteGround() = Route.Ground.valueOf(name)
-
 fun Route.toRouteEntity(): RouteEntity = RouteEntity(
         name = name,
         difficulty = difficulty,
-        type = type?.toRouteTypeEntity(),
-        ground = ground?.toRouteGroundEntity(),
+        type = type,
+        ground = ground,
         points = points.map { it.toPointEntity() },
         entries = entries.map { it.toEntryEntity() },
+        public = isPublic,
         id = id
 )
 
 fun RouteEntity.toRoute(): Route = Route(
         name = name,
         difficulty = difficulty,
-        type = type?.toRouteType(),
-        ground = ground?.toRouteGround(),
+        type = type,
+        ground = ground,
         points = points.map { it.toPoint() },
         entries = entries.map { it.toEntry() },
+        isPublic = public,
         id = id
 )

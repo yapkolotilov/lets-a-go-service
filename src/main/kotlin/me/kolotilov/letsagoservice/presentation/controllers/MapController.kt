@@ -3,6 +3,7 @@ package me.kolotilov.letsagoservice.presentation.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
+import me.kolotilov.letsagoservice.domain.models.Route
 import me.kolotilov.letsagoservice.domain.services.MapService
 import me.kolotilov.letsagoservice.domain.services.UserService
 import me.kolotilov.letsagoservice.presentation.input.*
@@ -21,10 +22,10 @@ class MapController(
     @GetMapping("/routes")
     fun getAllRoutes(
         @ApiParam("Фильтр.")
-        @RequestBody filter: FilterDto?
-    ): List<RoutePreviewDto> {
-        return mapService.getAllRoutes(filter?.toFilter())
-            .map { it.toRoutePreviewDto() }
+        @RequestParam("filter") filter: Boolean
+    ): List<RoutePointDto> {
+        return mapService.getAllRoutes(filter)
+            .map { it.toRoutePointDto() }
     }
 
     @ApiOperation("Возвращает маршрут по id.")
@@ -39,16 +40,25 @@ class MapController(
 
     @ApiOperation("Поиск маршрута.")
     @PostMapping("/routes/search")
-    fun findRoutes(
-        @ApiParam("Название маршрута.")
-        @RequestParam("name")
-        name: String?,
-        @ApiParam("Фильтр.")
+    fun searchRoutes(
+        @ApiParam("Запрос.")
         @RequestBody
-        filter: FilterDto?
-    ): List<RoutePreviewDto> {
-        return mapService.findRoutes(name, filter?.toFilter())
-            .map { it.toRoutePreviewDto() }
+        query: SearchRoutesDto
+    ): List<RouteItemDto> {
+        log.info("search routes: name: ${query.name}, filter: ${query.filter?.toFilter()}")
+        return mapService.findRoutes(query.name, query.filter?.toFilter())
+            .also { log.info("search routes: found routes: ${it.size}") }
+            .map { it.toRouteItemDto(query.userLocation?.toPoint()) }
+    }
+
+    @ApiOperation("Превью маршрута.")
+    @PostMapping("/routes/preview")
+    fun routePreview(
+        @ApiParam("Точки маршрута.")
+        @RequestBody
+        points: CreateRoutePreviewDto
+    ): RoutePreviewDto {
+        return mapService.getRoutePreview(points.points.map { it.toPoint() }).toRoutePreviewDto()
     }
 
     @ApiOperation("Создание маршрута.")
@@ -85,6 +95,26 @@ class MapController(
         mapService.deleteRoute(id)
     }
 
+    @ApiOperation("Начать поход.")
+    @PostMapping("/routes/{id}/startEntry")
+    fun startEntry(
+        @ApiParam("ID маршрута.")
+        @PathVariable("id")
+        id: Int,
+        @RequestBody
+        location: CreatePointDto
+    ): StartEntryDto {
+        return mapService.startEntry(id, location.toPoint()).toStartEntryDto()
+    }
+
+    @ApiOperation("Превью похода.")
+    @PostMapping("/entries/preview")
+    fun entryPreview(
+        @RequestBody entry: CreateEntryPreviewDto
+    ): EntryPreviewDto {
+        return mapService.entryPreview(entry.routeId, entry.points.map { it.toPoint() }).toEntryPreviewDto()
+    }
+
     @ApiOperation("Создание прохода.")
     @PostMapping("/routes/{id}/entries")
     fun createEntry(
@@ -111,7 +141,36 @@ class MapController(
 
     @ApiOperation("Возвращает все проходы.")
     @GetMapping("/entries")
-    fun getAllEntries(): List<EntryDto> {
-        return mapService.getAllEntries().map { it.toEntryDto() }
+    fun getAllEntries(): List<EntryItemDto> {
+        val routes = mapService.getAllRoutes(false)
+        return mapService.getAllEntries().map { entry ->
+            val route = routes.firstOrNull { it.entries.any { it.id == entry.id } }
+            entry.toRouteEntryDto(route)
+        }
     }
+
+    @ApiOperation("Возвращает поход.")
+    @GetMapping("/entries/{id}")
+    fun getEntry(
+        @ApiParam("ID похода.")
+        @PathVariable("id")
+        id: Int
+    ): EntryDetailsDto {
+        val route = mapService.getAllRoutes(false).first { route ->
+            route.entries.any { it.id == id }
+        }
+        return mapService.getEntry(id).toEntryDetailsDto(route, userService.getCurrentUser())
+    }
+
+    @ApiOperation("Возвращает маршрут на карте")
+    @GetMapping("/routes/{id}/map")
+    fun getRouteOnMap(
+        @ApiParam("ID маршрута.")
+        @PathVariable("id")
+        id: Int
+    ): RouteLineDto {
+        return mapService.getRoute(id).toRouteLineDto()
+    }
+
+    private fun Route.toRouteDetailsDto() = toRouteDetailsDto(userService.getCurrentUser())
 }

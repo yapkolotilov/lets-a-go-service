@@ -3,14 +3,16 @@ package me.kolotilov.letsagoservice.presentation.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
+import me.kolotilov.letsagoservice.domain.models.Point
+import me.kolotilov.letsagoservice.domain.models.User
 import me.kolotilov.letsagoservice.domain.services.IllnessService
+import me.kolotilov.letsagoservice.domain.services.MapService
 import me.kolotilov.letsagoservice.domain.services.SymptomService
 import me.kolotilov.letsagoservice.domain.services.UserService
-import me.kolotilov.letsagoservice.presentation.input.ChangePasswordDto
-import me.kolotilov.letsagoservice.presentation.input.EditDetailsDto
-import me.kolotilov.letsagoservice.presentation.input.toFilter
+import me.kolotilov.letsagoservice.presentation.input.*
 import me.kolotilov.letsagoservice.presentation.output.UserDetailsDto
 import me.kolotilov.letsagoservice.presentation.output.toUserDetailsDto
+import me.kolotilov.letsagoservice.utils.toDateTime
 import org.springframework.web.bind.annotation.*
 
 @Api("Личные данные юзера.")
@@ -19,17 +21,18 @@ import org.springframework.web.bind.annotation.*
 class DetailsController(
     private val userService: UserService,
     private val illnessService: IllnessService,
-    private val symptomService: SymptomService
+    private val symptomService: SymptomService,
+    private val mapService: MapService
 ) {
 
     @ApiOperation("Возвращает данные о здоровье пользователя.")
-    @GetMapping
-    fun getDetails(): UserDetailsDto {
-        return userService.getCurrentUser().toUserDetailsDto()
+    @PostMapping
+    fun getDetails(@RequestBody userLocation: DetailsDto): UserDetailsDto {
+        return userService.getCurrentUser().toUserDetailsDto(userLocation?.userLocation?.toPoint())
     }
 
     @ApiOperation("Редактирование данных о здоровье пользователя.")
-    @PostMapping
+    @PostMapping("/edit")
     fun editDetails(
         @ApiParam("Данные о здоровье пользователя.")
         @RequestBody
@@ -37,14 +40,14 @@ class DetailsController(
     ): UserDetailsDto {
         return userService.edit(
             name = details.name,
-            age = details.age,
+            birthDate = details.birthDate?.toDateTime(),
             height = details.height,
             weight = details.weight,
             illnesses = details.illnesses?.let { illnessService.getOrCreateAll(details.illnesses) },
             symptoms = details.symptoms?.let { symptomService.getOrCreateAll(details.symptoms) },
             filter = details.filter?.toFilter(),
             updateFilter = details.updateFilter,
-        ).toUserDetailsDto()
+        ).toUserDetailsDto(null)
     }
 
     @ApiOperation("Смена пароля.")
@@ -54,7 +57,7 @@ class DetailsController(
         @RequestBody
         passwordDto: ChangePasswordDto
     ): UserDetailsDto {
-        return userService.changePassword(passwordDto.password).toUserDetailsDto()
+        return userService.changePassword(passwordDto.password).toUserDetailsDto(null)
     }
 
     @ApiOperation("Возвращает список всех доступных заболеваний.")

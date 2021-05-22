@@ -1,5 +1,6 @@
 package me.kolotilov.letsagoservice.configuration.authorization
 
+import me.kolotilov.letsagoservice.configuration.LetsLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -12,6 +13,11 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * Фильтр запросов.
+ *
+ * Отвечает за авторизацию и логгирование запросов.
+ */
 @Component
 @Qualifier(JwtRequestFilter.QUALIFIER)
 class JwtRequestFilter : OncePerRequestFilter() {
@@ -26,6 +32,7 @@ class JwtRequestFilter : OncePerRequestFilter() {
     @Autowired
     private lateinit var jwtUtils: JwtUtils
 
+    private val log: LetsLogger = LetsLogger("MESSAGING")
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -50,6 +57,7 @@ class JwtRequestFilter : OncePerRequestFilter() {
                 SecurityContextHolder.getContext().authentication = token
             }
         }
+        log.info("REQUEST = ${request.pathInfo}")
         filterChain.doFilter(request, response)
     }
 }

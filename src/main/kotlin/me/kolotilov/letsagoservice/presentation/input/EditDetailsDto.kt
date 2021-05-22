@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.hibernate.validator.constraints.Range
+import java.util.*
 import javax.validation.constraints.NotEmpty
 
 @ApiModel("PersonalHealthDto: Данные о здоровье пользователя.")
@@ -14,9 +15,8 @@ data class EditDetailsDto(
     val name: String?,
 
     @ApiModelProperty("Возраст.")
-    @JsonProperty("age")
-    @Range(min = 1, max = 122)
-    val age: Int?,
+    @JsonProperty("birthDate")
+    val birthDate: Date?,
 
     @ApiModelProperty("Рост (см).")
     @JsonProperty("height")

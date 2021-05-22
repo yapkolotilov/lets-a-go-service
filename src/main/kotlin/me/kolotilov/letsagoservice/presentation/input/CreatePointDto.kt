@@ -15,6 +15,9 @@ data class CreatePointDto(
     @ApiModelProperty("Долгота.")
     @JsonProperty("longitude")
     val longitude: Double,
+    @ApiModelProperty("Высота.")
+    @JsonProperty("altitude")
+    val altitude: Double,
     @ApiModelProperty("Время.")
     @JsonProperty("timestamp")
     val timestamp: Date
@@ -23,6 +26,7 @@ data class CreatePointDto(
 fun CreatePointDto.toPoint() = Point(
     latitude = latitude,
     longitude = longitude,
+    altitude = altitude,
     timestamp = timestamp.toDateTime(),
-    id = 0
+    id = -1
 )

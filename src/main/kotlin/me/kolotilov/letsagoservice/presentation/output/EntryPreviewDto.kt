@@ -3,13 +3,12 @@ package me.kolotilov.letsagoservice.presentation.output
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
-import me.kolotilov.letsagoservice.domain.models.Route
-import me.kolotilov.letsagoservice.domain.models.RoutePreview
+import me.kolotilov.letsagoservice.domain.models.EntryPreview
 import me.kolotilov.letsagoservice.utils.toDate
 import java.util.*
 
-@ApiModel("RoutePreviewDto: превью маршрута.")
-data class RoutePreviewDto(
+@ApiModel("EntryPreviewDto: превью прохода.")
+data class EntryPreviewDto(
     @ApiModelProperty("Расстояние.")
     @JsonProperty("distance")
     val distance: Double,
@@ -25,20 +24,20 @@ data class RoutePreviewDto(
     @ApiModelProperty("Перепад высот.")
     @JsonProperty("altitudeDelta")
     val altitudeDelta: Double,
-    @ApiModelProperty("Тип.")
-    @JsonProperty("type")
-    val type: Route.Type,
-    @ApiModelProperty("Сложность")
-    @JsonProperty("difficulty")
-    val difficulty: Int
+    @ApiModelProperty("Пройден ли маршрут.")
+    @JsonProperty("passed")
+    val passed: Boolean,
+    @ApiModelProperty("ID маршрута.")
+    @JsonProperty("route_id")
+    val routeId: Int
 )
 
-fun RoutePreview.toRoutePreviewDto() = RoutePreviewDto(
+fun EntryPreview.toEntryPreviewDto() = EntryPreviewDto(
     distance = distance,
     duration = duration.toDate(),
     speed = speed,
     kiloCaloriesBurnt = kiloCaloriesBurnt,
     altitudeDelta = altitudeDelta,
-    type = type,
-    difficulty = difficulty
+    passed = passed,
+    routeId = routeId
 )
