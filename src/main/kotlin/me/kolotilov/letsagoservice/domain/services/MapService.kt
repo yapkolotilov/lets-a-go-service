@@ -206,6 +206,7 @@ private class MapServiceImpl(
 
     override fun getRoutePreview(points: List<Point>): RoutePreview {
         val distance = points.distance()
+        checkSpeed(points)
         if (points.isEmpty() || distance < 100)
             throw ServiceException(ErrorCode.ENTRY_TOO_SHORT)
         val speed = points.speed()
@@ -218,9 +219,9 @@ private class MapServiceImpl(
             else -> 5
         }
         val type = when (speed) {
-            in 0.0..6.0 -> Route.Type.WALKING
-            in 6.0..25.0 -> Route.Type.RUNNING
-            in 25.00..100.0 -> Route.Type.CYCLING
+            in 0.0..10.0 -> Route.Type.WALKING
+            in 10.0..20.0 -> Route.Type.RUNNING
+            in 20.00..50.0 -> Route.Type.CYCLING
             else -> throw ServiceException(ErrorCode.SPEED_TOO_FAST)
         }
         return RoutePreview(
@@ -236,6 +237,7 @@ private class MapServiceImpl(
 
     override fun entryPreview(routeId: Int, points: List<Point>): EntryPreview {
         val route = getRoute(routeId)
+        checkSpeed(points)
         if (points.isEmpty())
             throw ServiceException(ErrorCode.ENTRY_TOO_SHORT)
         val startPoint = route.points.first()
@@ -267,6 +269,12 @@ private class MapServiceImpl(
             throw ServiceException(ErrorCode.TOO_FAR_FROM_ROUTE)
         return route
     }
+
+    private fun checkSpeed(points: List<Point>) {
+        val maxSpeed = 50
+        if (points.zipWithNext { a, b -> listOf(a, b).speed() }.any { it > maxSpeed })
+            throw ServiceException(ErrorCode.SPEED_TOO_FAST)
+    }
 }
 
 /**
@@ -277,7 +285,6 @@ private class MapServiceImpl(
  * @param points Точки маршрута.
  */
 fun kiloCaloriesBurnt(user: User, type: Route.Type?, points: List<Point>): Int? {
-    val log = LetsLogger("KILOCALORIES")
     if (user.height == null || user.weight == null) return null
     return when (type) {
         Route.Type.WALKING -> {
