@@ -11,7 +11,7 @@ class ApplicationTests : BaseTests() {
     @DisplayName("Initialize context")
     fun contextLoads() {
         assertDoesNotThrow {
-            mapService.getAllRoutes(false)
+            mapService.getRoutes(false)
         }
     }
 }

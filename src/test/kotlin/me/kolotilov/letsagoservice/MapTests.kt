@@ -17,8 +17,8 @@ class MapTests : BaseTests() {
         @Test
         @DisplayName("Getting routes")
         fun getAllRoutes() {
-            val unfiltered = mapService.getAllRoutes(false)
-            val filtered = mapService.getAllRoutes(true)
+            val unfiltered = mapService.getRoutes(false)
+            val filtered = mapService.getRoutes(true)
             assertTrue { unfiltered.size >= filtered.size }
         }
 

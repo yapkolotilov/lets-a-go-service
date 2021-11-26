@@ -23,7 +23,7 @@ interface MapService {
     /**
      * Возвращает список всех маршрутов.
      */
-    fun getAllRoutes(filter: Boolean): List<Route>
+    fun getRoutes(filter: Boolean): List<Route>
 
     /**
      * Возвращает маршрут по id.
@@ -131,7 +131,7 @@ private class MapServiceImpl(
         private const val MIN_DISTANCE_TO_ROUTE = 20.0
     }
 
-    override fun getAllRoutes(filter: Boolean): List<Route> {
+    override fun getRoutes(filter: Boolean): List<Route> {
         val user = userService.getCurrentUser()
         return routeRepository.findAll()
             .map { it.toRoute() }
@@ -286,6 +286,7 @@ private class MapServiceImpl(
  */
 fun kiloCaloriesBurnt(user: User, type: Route.Type?, points: List<Point>): Int? {
     if (user.height == null || user.weight == null) return null
+    bodyMassIndex(user)
     return when (type) {
         Route.Type.WALKING -> {
             (0.035 * user.weight +

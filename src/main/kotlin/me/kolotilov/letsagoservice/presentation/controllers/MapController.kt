@@ -20,12 +20,15 @@ class MapController(
 
     @ApiOperation("Возвращает список всех маршрутов на карте.")
     @GetMapping("/routes")
-    fun getAllRoutes(
+    fun getRoutes(
         @ApiParam("Фильтр.")
-        @RequestParam("filter") filter: Boolean
-    ): List<RoutePointDto> {
-        return mapService.getAllRoutes(filter)
-            .map { it.toRoutePointDto() }
+        @RequestParam("filter") filter: Boolean,
+        @ApiParam("Левый верхний угол")
+        @RequestBody
+        coordinatesDto: CoordinatesDto
+    ): List<RouteDetailsDto> {
+        return mapService.getRoutes(filter)
+            .map { it.toRouteDetailsDto() }
     }
 
     @ApiOperation("Возвращает маршрут по id.")
@@ -142,7 +145,7 @@ class MapController(
     @ApiOperation("Возвращает все проходы.")
     @GetMapping("/entries")
     fun getAllEntries(): List<EntryItemDto> {
-        val routes = mapService.getAllRoutes(false)
+        val routes = mapService.getRoutes(false)
         return mapService.getAllEntries().map { entry ->
             val route = routes.firstOrNull { it.entries.any { it.id == entry.id } }
             entry.toRouteEntryDto(route)
@@ -156,7 +159,7 @@ class MapController(
         @PathVariable("id")
         id: Int
     ): EntryDetailsDto {
-        val route = mapService.getAllRoutes(false).first { route ->
+        val route = mapService.getRoutes(false).first { route ->
             route.entries.any { it.id == id }
         }
         return mapService.getEntry(id).toEntryDetailsDto(route, userService.getCurrentUser())
