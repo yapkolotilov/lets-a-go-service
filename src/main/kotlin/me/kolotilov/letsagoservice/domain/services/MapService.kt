@@ -240,11 +240,6 @@ private class MapServiceImpl(
         checkSpeed(points)
         if (points.isEmpty())
             throw ServiceException(ErrorCode.ENTRY_TOO_SHORT)
-        val startPoint = route.points.first()
-        val endPoint = route.points.last()
-        val lastPoint = points.last()
-        if (lastPoint distance startPoint > MIN_DISTANCE_TO_ROUTE && lastPoint distance endPoint > MIN_DISTANCE_TO_ROUTE)
-            throw ServiceException(ErrorCode.TOO_FAR_FROM_ROUTE)
 
         return EntryPreview(
             distance = points.distance(),
