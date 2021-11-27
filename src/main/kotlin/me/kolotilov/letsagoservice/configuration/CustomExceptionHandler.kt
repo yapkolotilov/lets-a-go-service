@@ -23,8 +23,8 @@ class CustomExceptionHandler : ResponseEntityExceptionHandler() {
     /**
      * Преобразовываем [ServiceException] в [ErrorDto для отображения на фронте.
      */
-    @ExceptionHandler(Throwable::class)
-    fun handleConflict(e: Throwable, request: WebRequest): ResponseEntity<*> {
+    @ExceptionHandler(Exception::class)
+    fun handleConflict(e: Exception, request: WebRequest): ResponseEntity<*> {
         if (e is ServiceException) {
             log.warn(e.toString())
             return handleExceptionInternal(e, e.toErrorDto(), HttpHeaders(), e.status, request)
