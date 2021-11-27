@@ -27,13 +27,8 @@ class MapController(
         @RequestBody
         coordinatesDto: CoordinatesDto
     ): List<RouteLineDto> {
-        return try {
-            mapService.getRoutes(filter)
-                .map { it.toRouteLineDto() }
-        } catch (e: Exception) {
-            log.error(e)
-            throw e
-        }
+        return mapService.getRoutes(filter)
+            .map { it.toRouteLineDto() }
     }
 
     @ApiOperation("Возвращает маршрут по id.")
@@ -112,7 +107,9 @@ class MapController(
         @RequestBody
         location: CreatePointDto
     ): StartEntryDto {
-        return mapService.startEntry(id, location.toPoint()).toStartEntryDto()
+        return logErrors {
+            mapService.startEntry(id, location.toPoint()).toStartEntryDto()
+        }
     }
 
     @ApiOperation("Превью похода.")
@@ -181,4 +178,13 @@ class MapController(
     }
 
     private fun Route.toRouteDetailsDto() = toRouteDetailsDto(userService.getCurrentUser())
+}
+
+inline fun <T> logErrors(body: () -> T): T {
+    return try {
+        body()
+    } catch (e: Throwable) {
+        println("ERROR: $e")
+        throw e
+    }
 }
