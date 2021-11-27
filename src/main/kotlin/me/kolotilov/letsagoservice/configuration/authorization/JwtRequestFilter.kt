@@ -57,7 +57,7 @@ class JwtRequestFilter : OncePerRequestFilter() {
                 SecurityContextHolder.getContext().authentication = token
             }
         }
-        log.info("REQUEST = ${request.pathInfo}")
+        log.info("REQUEST = ${request.requestURI}")
         filterChain.doFilter(request, response)
     }
 }
