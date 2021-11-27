@@ -19,21 +19,16 @@ class CustomExceptionHandler : ResponseEntityExceptionHandler() {
 
     private val log = LetsLogger("EXCEPTION_HANDLER")
 
-    /**
-     * Логгируем каждую ошибку.
-     *
-     */
-    @ExceptionHandler(ServiceException::class)
-    fun handleServiceConflict(e: ServiceException, request: WebRequest): ResponseEntity<*> {
-        log.warn(e.toString())
-        return handleExceptionInternal(e, e.toErrorDto(), HttpHeaders(), e.status, request)
-    }
 
     /**
      * Преобразовываем [ServiceException] в [ErrorDto для отображения на фронте.
      */
-    @ExceptionHandler(Exception::class)
-    fun handleConflict(e: Exception, request: WebRequest): ResponseEntity<*> {
+    @ExceptionHandler(Throwable::class)
+    fun handleConflict(e: Throwable, request: WebRequest): ResponseEntity<*> {
+        if (e is ServiceException) {
+            log.warn(e.toString())
+            return handleExceptionInternal(e, e.toErrorDto(), HttpHeaders(), e.status, request)
+        }
         val status = if (e is HttpStatusCodeException) e.statusCode else HttpStatus.BAD_REQUEST
         val body = ErrorDto(
             code = ErrorCode.OTHER,
@@ -42,6 +37,6 @@ class CustomExceptionHandler : ResponseEntityExceptionHandler() {
             stackTrace = e.stackTraceToString()
         )
         log.error(e.toString())
-        return handleExceptionInternal(e, body, HttpHeaders(), status, request)
+        return ResponseEntity(body, status)
     }
 }
