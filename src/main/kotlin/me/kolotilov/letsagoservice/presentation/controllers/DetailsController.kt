@@ -28,7 +28,12 @@ class DetailsController(
     @ApiOperation("Возвращает данные о здоровье пользователя.")
     @PostMapping
     fun getDetails(@RequestBody userLocation: DetailsDto): UserDetailsDto {
-        return userService.getCurrentUser().toUserDetailsDto(userLocation?.userLocation?.toPoint())
+        return try {
+            userService.getCurrentUser().toUserDetailsDto(userLocation?.userLocation?.toPoint())
+        } catch (e: Throwable) {
+            println("ERROR = $e")
+            throw e
+        }
     }
 
     @ApiOperation("Редактирование данных о здоровье пользователя.")
