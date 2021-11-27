@@ -19,7 +19,7 @@ class MapController(
 ) : BaseController("MAP") {
 
     @ApiOperation("Возвращает список всех маршрутов на карте.")
-    @GetMapping("/routes")
+    @PostMapping("/routes")
     fun getRoutes(
         @ApiParam("Фильтр.")
         @RequestParam("filter") filter: Boolean,
