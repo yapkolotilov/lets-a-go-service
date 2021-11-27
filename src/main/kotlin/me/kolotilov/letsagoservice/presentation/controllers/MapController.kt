@@ -3,6 +3,7 @@ package me.kolotilov.letsagoservice.presentation.controllers
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
+import jdk.internal.org.jline.utils.Log
 import me.kolotilov.letsagoservice.domain.models.Route
 import me.kolotilov.letsagoservice.domain.services.MapService
 import me.kolotilov.letsagoservice.domain.services.UserService
@@ -27,8 +28,14 @@ class MapController(
         @RequestBody
         coordinatesDto: CoordinatesDto
     ): List<RouteDetailsDto> {
-        return mapService.getRoutes(filter)
-            .map { it.toRouteDetailsDto() }
+        return try {
+            mapService.getRoutes(filter)
+                .map { it.toRouteDetailsDto() }
+        } catch (e: Exception) {
+            Log.error(e.toString())
+            log.error(e)
+            throw e
+        }
     }
 
     @ApiOperation("Возвращает маршрут по id.")
