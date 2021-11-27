@@ -26,10 +26,10 @@ class MapController(
         @ApiParam("Левый верхний угол")
         @RequestBody
         coordinatesDto: CoordinatesDto
-    ): List<RouteDetailsDto> {
+    ): List<RouteLineDto> {
         return try {
             mapService.getRoutes(filter)
-                .map { it.toRouteDetailsDto() }
+                .map { it.toRouteLineDto() }
         } catch (e: Exception) {
             log.error(e)
             throw e
