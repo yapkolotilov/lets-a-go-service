@@ -132,10 +132,9 @@ private class MapServiceImpl(
     }
 
     override fun getRoutes(filter: Boolean): List<Route> {
-        val user = userService.getCurrentUser()
         return routeRepository.findAll()
             .map { it.toRoute() }
-            .filter { it.isPublic || user.routes.contains(it) }
+            .filterAvailable()
             .filter {
                 if (filter)
                     userService.getCurrentUser().filter.matches(it)
@@ -152,6 +151,7 @@ private class MapServiceImpl(
     override fun findRoutes(name: String?, filter: Filter?): List<Route> {
         return routeRepository.findAll()
             .map { it.toRoute() }
+            .filterAvailable()
             .filter { route ->
                 name?.let { (route.name ?: "Маршрут").contains(name, true) } ?: true
             }
@@ -269,6 +269,16 @@ private class MapServiceImpl(
         val maxSpeed = 50
         if (points.zipWithNext { a, b -> listOf(a, b).speed() }.any { it > maxSpeed })
             throw ServiceException(ErrorCode.SPEED_TOO_FAST)
+    }
+
+    private fun List<Route>.filterAvailable(): List<Route> {
+        val user = userService.getCurrentUser()
+        return filter { it.isPublic || user.routes.contains(it) }
+    }
+
+    private fun Route.takeIfAvailable(): Route? {
+        val user = userService.getCurrentUser()
+        return takeIf { it.isPublic || user.routes.contains(it) }
     }
 }
 
