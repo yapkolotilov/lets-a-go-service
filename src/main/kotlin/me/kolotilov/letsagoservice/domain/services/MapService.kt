@@ -128,7 +128,7 @@ private class MapServiceImpl(
 
     companion object {
 
-        private const val MIN_DISTANCE_TO_ROUTE = 20.0
+        private const val MIN_DISTANCE_TO_ROUTE = 50.0
     }
 
     override fun getRoutes(filter: Boolean): List<Route> {
