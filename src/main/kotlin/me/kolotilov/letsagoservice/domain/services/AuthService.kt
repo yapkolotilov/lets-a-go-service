@@ -67,7 +67,7 @@ class AuthServiceImpl(
         val user = User(
             username = username,
             password = password,
-            confirmationUrl = url
+            confirmationUrl = ""
         )
         try {
             sendEmail(username, url)
