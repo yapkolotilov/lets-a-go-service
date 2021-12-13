@@ -67,7 +67,7 @@ class AuthServiceImpl(
         val user = User(
             username = username,
             password = password,
-            confirmationUrl = url
+            confirmationUrl = ""
         )
         try {
             sendEmail(username, url)
@@ -100,7 +100,7 @@ class AuthServiceImpl(
         return userRepository.findByUsername(username).toNullable()?.toUser()
     }
 
-    private fun sendEmail(email: String, url: String) {
+    private fun sendEmail(email: String, url: String) = runCatching {
         val mailSender = JavaMailSenderImpl().apply {
             host = "smtp.gmail.com"
             port = 465
@@ -123,5 +123,5 @@ class AuthServiceImpl(
                     "Перейдите по ссылке для подтверждения e-mail: <a>$baseUrl/auth/confirm_email/$url</a>", true)
         }
         mailSender.send(mimeMessage)
-    }
+    }.run { Unit }
 }
