@@ -74,7 +74,8 @@ class AuthServiceImpl(
         } catch (e: Exception) {
             throw ServiceException(
                 code = ErrorCode.INVALID_USERNAME,
-                message = "Неправильный e-mail: такой почты не существует!"
+                message = "Неправильный e-mail: такой почты не существует!",
+                stackTrace = e.stackTraceToString()
             )
         }
         userRepository.save(user.toUserEntity())
