@@ -103,9 +103,9 @@ class AuthServiceImpl(
     private fun sendEmail(email: String, url: String) {
         val mailSender = JavaMailSenderImpl().apply {
             host = "smtp.gmail.com"
-            port = 587
+            port = 465
             username = "letsagoservice@gmail.com"
-            password = "Q!12345678"
+            password = "xnbyddpfcowxtqzr"
             protocol = "smtp"
             val  props = javaMailProperties;
             props["mail.transport.protocol"] = "smtp";
