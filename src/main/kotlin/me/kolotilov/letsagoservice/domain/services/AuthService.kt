@@ -105,7 +105,7 @@ class AuthServiceImpl(
             host = "smtp.gmail.com"
             port = 465
             username = "letsagoservice@gmail.com"
-            password = "xnbyddpfcowxtqzr"
+            password = "Q!12345678"
             protocol = "smtp"
             val  props = javaMailProperties;
             props["mail.transport.protocol"] = "smtp";
