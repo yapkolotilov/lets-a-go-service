@@ -129,6 +129,7 @@ private class MapServiceImpl(
     companion object {
 
         private const val MIN_DISTANCE_TO_ROUTE = 50.0
+        private const val MIN_ENTRY_DISTANCE = 100.0
     }
 
     override fun getRoutes(filter: Boolean): List<Route> {
@@ -175,6 +176,8 @@ private class MapServiceImpl(
     }
 
     override fun createEntry(routeId: Int, entry: Entry): Route {
+        if (entry.distance() < MIN_ENTRY_DISTANCE)
+            throw ServiceException(ErrorCode.ENTRY_TOO_SHORT)
         var route = routeRepository.findById(routeId).toNullable()?.toRoute()!!
         val newEntry = entryRepository.save(entry.toEntryEntity()).toEntry()
         route = route.copy(
